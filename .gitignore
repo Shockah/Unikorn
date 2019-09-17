@@ -1,16 +1,5 @@
-# Gradle project-specific cache directory
 .gradle
 local.properties
-config.json
-
-# Build output directories
 /**/out
 /**/build
-/test-poc/*/out
-/local.properties
-
-# IDE
 .idea
-
-# Database directory
-database/*
