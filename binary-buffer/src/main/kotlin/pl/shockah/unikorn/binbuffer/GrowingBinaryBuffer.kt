@@ -1,4 +1,4 @@
-package pl.shockah.unikorn.io
+package pl.shockah.unikorn.binbuffer
 
 import kotlin.math.max
 import kotlin.properties.Delegates.vetoable

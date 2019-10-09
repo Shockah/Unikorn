@@ -1,9 +1,7 @@
-package pl.shockah.unikorn
+package pl.shockah.unikorn.binbuffer
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import pl.shockah.unikorn.io.Endianness
-import pl.shockah.unikorn.io.GrowingBinaryBuffer
 
 class TestGrowingBinaryBuffer {
 	@Test
