@@ -1,0 +1,6 @@
+{
+	"identifier": "pl.shockah.unikorn.plugin.strong1",
+	"pluginClassName": "pl.shockah.unikorn.plugin.strong1.Strong1Plugin",
+	"version": "1.0",
+	"isTestPlugin": true
+}

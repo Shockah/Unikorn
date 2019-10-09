@@ -1,0 +1,5 @@
+dependencies {
+	compileOnly project(':core')
+	compileOnly project(':plugin')
+	compileOnly project(':plugin:test-strong1')
+}

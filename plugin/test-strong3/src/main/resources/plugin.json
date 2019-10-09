@@ -1,0 +1,11 @@
+{
+	"identifier": "pl.shockah.unikorn.plugin.strong3",
+	"pluginClassName": "pl.shockah.unikorn.plugin.strong3.Strong3Plugin",
+	"version": "1.0",
+	"dependencies": [
+		{
+			"identifier": "pl.shockah.unikorn.plugin.strong1"
+		}
+	],
+	"isTestPlugin": true
+}
