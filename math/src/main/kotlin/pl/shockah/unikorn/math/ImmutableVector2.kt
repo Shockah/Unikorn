@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 class ImmutableVector2(
 		override val x: Double,
 		override val y: Double
-) : BaseVector2<ImmutableVector2>() {
+): BaseVector2<ImmutableVector2>() {
 	override val lengthSquared by lazy { super.lengthSquared }
 
 	override val length by lazy { sqrt(lengthSquared) }

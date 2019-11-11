@@ -7,7 +7,7 @@ import pl.shockah.unikorn.plugin.PluginManager
 class Weak1Plugin(
 		manager: PluginManager,
 		info: PluginInfo
-) : Plugin(manager, info) {
+): Plugin(manager, info) {
 	@OptionalDependency("pl.shockah.unikorn.plugin.weak2")
 	private var weak2Plugin: Plugin? = null
 

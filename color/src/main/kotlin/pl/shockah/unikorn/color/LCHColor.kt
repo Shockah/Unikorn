@@ -12,7 +12,7 @@ data class LCHColor(
 		val c: Float,
 		val h: Angle,
 		val reference: XYZColor.Reference = XYZColor.Reference.D65_2
-) : BaseColor<LCHColor>() {
+): BaseColor<LCHColor>() {
 	companion object {
 		fun from(lab: LabColor): LCHColor {
 			return LCHColor(

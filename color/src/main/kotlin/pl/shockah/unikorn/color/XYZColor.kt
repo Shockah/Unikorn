@@ -11,7 +11,7 @@ data class XYZColor(
 		val x: Float,
 		val y: Float,
 		val z: Float
-) : BaseColor<XYZColor>() {
+): BaseColor<XYZColor>() {
 	data class Reference(
 			val x: Float,
 			val y: Float,

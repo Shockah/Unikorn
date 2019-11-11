@@ -8,7 +8,7 @@ import kotlin.math.tan
 
 inline class Radians @Deprecated("Use Radians.Companion.of(value: Double) instead") constructor(
 		val value: Double
-) : BaseAngle<Radians> {
+): BaseAngle<Radians> {
 	companion object {
 		val zero = Radians()
 		val half = of(PI)

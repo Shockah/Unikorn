@@ -1,3 +1,3 @@
 include 'core'
-include 'binary-buffer', 'cassowary', 'color', 'ease', 'math'
+include 'binary-buffer', 'cassowary', 'color', 'ease', 'geometry', 'math'
 include 'plugin', 'plugin:test-basic', 'plugin:test-strong1', 'plugin:test-strong2', 'plugin:test-strong3', 'plugin:test-weak1', 'plugin:test-weak2'

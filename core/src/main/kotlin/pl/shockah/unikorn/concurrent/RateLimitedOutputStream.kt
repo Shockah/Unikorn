@@ -9,7 +9,7 @@ import kotlin.math.min
 class RateLimitedOutputStream(
 		stream: OutputStream,
 		val limiter: RateLimiter
-) : FilterOutputStream(stream) {
+): FilterOutputStream(stream) {
 	private val lock = ReentrantLock()
 
 	override fun write(b: Int) {

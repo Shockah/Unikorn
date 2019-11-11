@@ -8,7 +8,7 @@ import pl.shockah.unikorn.plugin.strong3.Strong3Plugin
 class Strong2Plugin(
 		manager: PluginManager,
 		info: PluginInfo
-) : Plugin(manager, info) {
+): Plugin(manager, info) {
 	@RequiredDependency
 	private lateinit var strong3Plugin: Strong3Plugin
 

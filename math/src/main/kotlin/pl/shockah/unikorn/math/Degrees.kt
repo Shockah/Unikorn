@@ -4,7 +4,7 @@ import pl.shockah.unikorn.ease.ease
 
 inline class Degrees @Deprecated("Use Degrees.Companion.of(value: Double) instead") constructor(
 		val value: Double
-) : BaseAngle<Degrees> {
+): BaseAngle<Degrees> {
 	companion object {
 		val zero = Degrees()
 		val half = of(180.0)

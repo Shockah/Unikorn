@@ -54,7 +54,7 @@ interface Easable<T> {
 	class Wrapper<T>(
 			val wrapped: T,
 			private val function: (a: T, b: T, f: Float) -> T
-	) : Easable<Wrapper<T>> {
+	): Easable<Wrapper<T>> {
 		override fun ease(other: Wrapper<T>, f: Float): Wrapper<T> {
 			return Wrapper(function(wrapped, other.wrapped, f), function)
 		}

@@ -6,7 +6,7 @@ import kotlin.properties.Delegates.vetoable
 class GrowingBinaryBuffer(
 		initialCapacity: Int = 8192,
 		override val endianness: Endianness = Endianness.LittleEndian
-) : BinaryBuffer.Memory, BinaryBuffer.Readable.Data, BinaryBuffer.Writable.Data {
+): BinaryBuffer.Memory, BinaryBuffer.Readable.Data, BinaryBuffer.Writable.Data {
 	companion object {
 		private const val MAX_ARRAY_SIZE = Int.MAX_VALUE - 8
 	}

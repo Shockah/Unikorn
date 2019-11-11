@@ -77,7 +77,7 @@ open class Plugin(
 
 				data class Number(
 						val number: Int
-				) : Part() {
+				): Part() {
 					override fun toString(): String {
 						return "$number"
 					}
@@ -89,7 +89,7 @@ open class Plugin(
 
 				data class MinNumber(
 						val number: Int
-				) : Part() {
+				): Part() {
 					override fun toString(): String {
 						return "$number+"
 					}

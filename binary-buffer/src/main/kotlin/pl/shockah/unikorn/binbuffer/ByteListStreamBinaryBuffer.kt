@@ -4,7 +4,7 @@ import kotlin.math.min
 
 class ByteListStreamBinaryBuffer(
 		private val chunkSize: Int = 8192
-) : BinaryBuffer.Readable, BinaryBuffer.Writable {
+): BinaryBuffer.Readable, BinaryBuffer.Writable {
 	private val arrays = mutableListOf<ByteArray>()
 
 	private var readOffset = 0

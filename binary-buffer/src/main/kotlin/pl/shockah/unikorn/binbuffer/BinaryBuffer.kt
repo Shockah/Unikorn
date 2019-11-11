@@ -28,7 +28,7 @@ fun BinaryBuffer.Writable.asData(endianness: Endianness = Endianness.LittleEndia
 }
 
 interface BinaryBuffer {
-	interface Readable : BinaryBuffer {
+	interface Readable: BinaryBuffer {
 		val readAvailable: Int
 
 		fun readByte(): Byte
@@ -47,7 +47,7 @@ interface BinaryBuffer {
 			return array
 		}
 
-		interface Data : Readable {
+		interface Data: Readable {
 			val endianness: Endianness
 
 			fun readInt(bytes: Int): Int {
@@ -112,7 +112,7 @@ interface BinaryBuffer {
 		}
 	}
 
-	interface Writable : BinaryBuffer {
+	interface Writable: BinaryBuffer {
 		fun writeByte(v: Byte)
 
 		fun writeUByte(v: UByte) {
@@ -133,7 +133,7 @@ interface BinaryBuffer {
 			writeBytes(bytes, false)
 		}
 
-		interface Data : Writable {
+		interface Data: Writable {
 			val endianness: Endianness
 
 			fun writeInt(v: Int, bytes: Int) {
@@ -182,7 +182,7 @@ interface BinaryBuffer {
 		}
 	}
 
-	interface Memory : Readable, Writable {
+	interface Memory: Readable, Writable {
 		var readPosition: Int
 
 		var writePosition: Int

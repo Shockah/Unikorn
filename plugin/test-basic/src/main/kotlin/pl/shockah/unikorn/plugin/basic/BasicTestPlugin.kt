@@ -7,7 +7,7 @@ import pl.shockah.unikorn.plugin.PluginManager
 class BasicTestPlugin(
 		manager: PluginManager,
 		info: PluginInfo
-) : Plugin(manager, info) {
+): Plugin(manager, info) {
 	init {
 		println("Loading ${this::class.simpleName}")
 	}

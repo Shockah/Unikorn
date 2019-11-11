@@ -10,7 +10,7 @@ data class HSLColor(
 		val h: Angle,
 		val s: Float,
 		val l: Float
-) : BaseColor<HSLColor>() {
+): BaseColor<HSLColor>() {
 	companion object {
 		fun from(rgb: RGBColor): HSLColor {
 			val max = maxOf(rgb.r, rgb.g, rgb.b)

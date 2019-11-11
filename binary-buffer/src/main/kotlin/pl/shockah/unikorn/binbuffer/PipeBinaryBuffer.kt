@@ -9,7 +9,7 @@ import kotlin.concurrent.withLock
 
 class PipeBinaryBuffer private constructor(
 		underlyingBuffer: BinaryBuffer
-) : BinaryBuffer.Readable, BinaryBuffer.Writable, Closeable {
+): BinaryBuffer.Readable, BinaryBuffer.Writable, Closeable {
 	private val readable = underlyingBuffer as BinaryBuffer.Readable
 
 	private val writable = underlyingBuffer as BinaryBuffer.Writable

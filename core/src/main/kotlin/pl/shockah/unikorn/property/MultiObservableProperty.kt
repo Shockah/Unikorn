@@ -5,7 +5,7 @@ import kotlin.reflect.KProperty
 
 class MultiObservableProperty<T>(
 		defaultValue: T
-) : ReadWriteProperty<Any?, T> {
+): ReadWriteProperty<Any?, T> {
 	private var value: T = defaultValue
 
 	private val observers = mutableListOf<Observer<T>>()

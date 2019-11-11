@@ -8,7 +8,7 @@ data class RGBColor(
 		val r: Float,
 		val g: Float,
 		val b: Float
-) : BaseColor<RGBColor>() {
+): BaseColor<RGBColor>() {
 	constructor(lightness: Float) : this(lightness, lightness, lightness)
 
 	companion object {

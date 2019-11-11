@@ -9,7 +9,7 @@ data class LabColor(
 		val a: Float,
 		val b: Float,
 		val reference: XYZColor.Reference = XYZColor.Reference.D65_2
-) : BaseColor<LabColor>() {
+): BaseColor<LabColor>() {
 	companion object {
 		fun from(xyz: XYZColor, reference: XYZColor.Reference = XYZColor.Reference.D65_2): LabColor {
 			var x = xyz.x / reference.x
