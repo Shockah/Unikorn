@@ -24,8 +24,8 @@ interface ExpressionArgument {
 			argument.buildExpression(innerConstant, innerTerms)
 
 			constant.value += innerConstant.value * multiplier
-			for (term in innerTerms) {
-				terms[term.key] = terms.getOrDefault(term.key, 0.0) + term.value * multiplier
+			for ((variable, coefficient) in innerTerms) {
+				terms[variable] = terms.getOrDefault(variable, 0.0) + coefficient * multiplier
 			}
 		}
 	}
@@ -40,7 +40,7 @@ operator fun ExpressionArgument.plus(scalar: Double): ExpressionArgument {
 }
 
 operator fun ExpressionArgument.minus(scalar: Double): ExpressionArgument {
-	return this - ExpressionArgument.Scalar(scalar)
+	return this + ExpressionArgument.Scalar(-scalar)
 }
 
 operator fun ExpressionArgument.plus(argument: ExpressionArgument): ExpressionArgument {
@@ -56,5 +56,6 @@ operator fun ExpressionArgument.times(coefficient: Double): ExpressionArgument {
 }
 
 operator fun ExpressionArgument.div(coefficient: Double): ExpressionArgument {
+	require(coefficient != 0.0)
 	return Expression(ExpressionArgument.Multiplier(1.0 / coefficient, this))
 }
