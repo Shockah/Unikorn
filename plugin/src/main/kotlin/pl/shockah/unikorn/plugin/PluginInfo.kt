@@ -3,7 +3,7 @@ package pl.shockah.unikorn.plugin
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 import pl.shockah.unikorn.guard
-import pl.shockah.unikorn.mapValid
+import pl.shockah.unikorn.collection.mapValid
 import java.io.File
 import java.io.IOException
 import java.net.URL
