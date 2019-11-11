@@ -11,8 +11,8 @@ class Expression private constructor(
 
 	val value: Double by lazy {
 		var result = constant
-		for (term in terms) {
-			result += term.key.value * term.value
+		for ((variable, coefficient) in terms) {
+			result += variable.value * coefficient
 		}
 		return@lazy result
 	}
@@ -36,8 +36,8 @@ class Expression private constructor(
 
 	override fun buildExpression(constant: Ref<Double>, terms: MutableMap<Variable, Double>) {
 		constant.value += this.constant
-		for (term in this.terms) {
-			terms[term.key] = terms.getOrDefault(term.key, 0.0) + term.value
+		for ((variable, coefficient) in this.terms) {
+			terms[variable] = terms.getOrDefault(variable, 0.0) + coefficient
 		}
 	}
 }
