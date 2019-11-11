@@ -1,6 +1,6 @@
 package pl.shockah.unikorn.plugin
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
@@ -73,7 +73,7 @@ class PluginManagerTest {
 		System.setOut(systemOut)
 
 		val result = String(baos.toByteArray()).trim().lines()
-		Assertions.assertEquals("""
+		assertEquals("""
 			Loading BasicTestPlugin
 			Unloading BasicTestPlugin
 		""".trimIndent().lines(), result)
@@ -90,7 +90,7 @@ class PluginManagerTest {
 		System.setOut(systemOut)
 
 		val result = String(baos.toByteArray()).trim().lines()
-		Assertions.assertEquals("""
+		assertEquals("""
 			Loading Strong1Plugin
 			Loading Strong3Plugin
 			Loaded required dependencies for Strong3Plugin
@@ -120,15 +120,15 @@ class PluginManagerTest {
 		val indexUnloading2 = result.indexOf("Unloading Weak2Plugin")
 		val indexLoadedOptional = result.indexOf("Loaded optional dependency Weak2Plugin for Weak1Plugin")
 
-		Assertions.assertNotEquals(indexLoading1, -1)
-		Assertions.assertNotEquals(indexUnloading1, -1)
-		Assertions.assertNotEquals(indexLoading2, -1)
-		Assertions.assertNotEquals(indexUnloading2, -1)
-		Assertions.assertNotEquals(indexLoadedOptional, -1)
+		assertNotEquals(indexLoading1, -1)
+		assertNotEquals(indexUnloading1, -1)
+		assertNotEquals(indexLoading2, -1)
+		assertNotEquals(indexUnloading2, -1)
+		assertNotEquals(indexLoadedOptional, -1)
 
-		Assertions.assertTrue(indexLoading1 < indexUnloading1)
-		Assertions.assertTrue(indexLoading2 < indexUnloading2)
-		Assertions.assertTrue(indexLoadedOptional < indexUnloading1)
-		Assertions.assertTrue(indexLoadedOptional < indexUnloading2)
+		assertTrue(indexLoading1 < indexUnloading1)
+		assertTrue(indexLoading2 < indexUnloading2)
+		assertTrue(indexLoadedOptional < indexUnloading1)
+		assertTrue(indexLoadedOptional < indexUnloading2)
 	}
 }
