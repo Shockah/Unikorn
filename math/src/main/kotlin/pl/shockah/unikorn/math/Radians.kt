@@ -6,7 +6,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.tan
 
-inline class Radians @Deprecated("Use Radians.Companion.of(value: Float) instead") constructor(
+inline class Radians @Deprecated("Use Radians.Companion.of(value: Double) instead") constructor(
 		val value: Double
 ) : BaseAngle<Radians> {
 	companion object {
