@@ -1,0 +1,15 @@
+dependencies {
+	compile project(':core')
+	compile project(':ease')
+	compile project(':math')
+}
+
+test {
+	useJUnitPlatform()
+
+	dependsOn 'cleanTest'
+
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
+}
