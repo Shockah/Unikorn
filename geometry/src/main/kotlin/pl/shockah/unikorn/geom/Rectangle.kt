@@ -20,6 +20,12 @@ class Rectangle(
 	override val center: Vector2
 		get() = position + size * 0.5
 
+	override val perimeter: Double
+		get() = (size.x + size.y) * 2.0
+
+	override val area: Double
+		get() = size.x * size.y
+
 	val left: Double
 		get() = position.x
 

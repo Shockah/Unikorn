@@ -26,6 +26,9 @@ class Line(
 	override val center: Vector2
 		get() = (point1 + point2) * 0.5
 
+	override val perimeter: Double
+		get() = (point2 - point1).length
+
 	val degrees: Degrees
 		get() = (point2 - point1).degrees
 

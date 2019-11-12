@@ -6,12 +6,14 @@ import pl.shockah.unikorn.geom.polygon.Polygon
 import pl.shockah.unikorn.math.ImmutableVector2
 import pl.shockah.unikorn.math.MutableVector2
 import pl.shockah.unikorn.math.Vector2
+import kotlin.math.PI
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 class Circle(
 		position: Vector2 = ImmutableVector2.zero,
 		var radius: Double
-) : Shape.Filled, Shape.Outline, Easable<Circle> {
+): Shape.Filled, Easable<Circle> {
 	var position: MutableVector2 = position.mutableCopy()
 
 	override val boundingBox: Rectangle
@@ -19,6 +21,12 @@ class Circle(
 
 	override val center: Vector2
 		get() = position
+
+	override val perimeter: Double
+		get() = 2.0 * PI * radius
+
+	override val area: Double
+		get() = PI * radius.pow(2)
 
 	companion object {
 		init {

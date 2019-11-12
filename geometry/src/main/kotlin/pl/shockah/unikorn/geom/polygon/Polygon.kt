@@ -12,7 +12,7 @@ import pl.shockah.unikorn.math.Vector2
 
 open class Polygon(
 		points: List<Vector2>
-): Shape.Outline, Easable<Polygon> {
+): Shape, Easable<Polygon> {
 	val points: ObservableList<MutableVector2> = ObservableList(points.map { it.mutableCopy() }.toMutableList())
 
 	constructor(vararg points: Vector2) : this(points.toMutableList())
@@ -29,6 +29,9 @@ open class Polygon(
 			}
 			return Rectangle(ImmutableVector2(minX, minY), ImmutableVector2(maxX - minX, maxY - minY))
 		}
+
+	override val perimeter: Double
+		get() = lines.sumByDouble { it.perimeter }
 
 	open val lines: List<Line>
 		get() {
@@ -80,8 +83,9 @@ open class Polygon(
 	}
 
 	override fun ease(other: Polygon, f: Float): Polygon {
-		if (points.size != other.points.size)
-			throw IllegalArgumentException()
+		require(other::class == Polygon::class)
+		// TODO: handle different number of points via splitting lines using the Lowest Common Multiple
+		require(points.size == other.points.size)
 		return Polygon(points.mapIndexed { index, point -> point.ease(other.points[index], f) })
 	}
 }

@@ -13,10 +13,18 @@ interface Shape {
 	val center: Vector2
 		get() = boundingBox.center
 
+	val perimeter: Double
+
 	companion object {
 		val none = object : Filled {
 			override val boundingBox: Rectangle
 				get() = Rectangle(size = ImmutableVector2.zero)
+
+			override val perimeter: Double
+				get() = 0.0
+
+			override val area: Double
+				get() = 0.0
 
 			override fun copy(): Filled {
 				return this
@@ -42,6 +50,12 @@ interface Shape {
 						ImmutableVector2(-Double.MAX_VALUE, -Double.MAX_VALUE),
 						ImmutableVector2(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
 				)
+
+			override val perimeter: Double
+				get() = Double.POSITIVE_INFINITY
+
+			override val area: Double
+				get() = Double.POSITIVE_INFINITY
 
 			override fun copy(): Filled {
 				return this
@@ -120,9 +134,9 @@ interface Shape {
 		return shapesCollide(this, other)
 	}
 
-	interface Filled : Shape {
+	interface Filled: Shape {
+		val area: Double
+
 		operator fun contains(point: Vector2): Boolean
 	}
-
-	interface Outline : Shape
 }

@@ -3,7 +3,7 @@ package pl.shockah.unikorn.geom.polygon
 import pl.shockah.unikorn.geom.Shape
 
 class Polygonable private constructor() {
-	interface Open: Shape.Outline {
+	interface Open: Shape {
 		fun asPolygon(): Polygon
 	}
 

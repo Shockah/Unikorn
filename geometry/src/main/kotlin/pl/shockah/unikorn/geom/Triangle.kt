@@ -6,6 +6,7 @@ import pl.shockah.unikorn.geom.polygon.Polygonable
 import pl.shockah.unikorn.math.ImmutableVector2
 import pl.shockah.unikorn.math.MutableVector2
 import pl.shockah.unikorn.math.Vector2
+import kotlin.math.abs
 
 class Triangle(
 		point1: Vector2,
@@ -22,6 +23,12 @@ class Triangle(
 			val maxY = maxOf(points[0].y, points[1].y, points[2].y)
 			return Rectangle(ImmutableVector2(minX, minY), ImmutableVector2(maxX - minX, maxY - minY))
 		}
+
+	override val perimeter: Double
+		get() = lines.sumByDouble { it.perimeter }
+
+	override val area: Double
+		get() = abs((points[0].x * (points[1].y - points[2].y) + points[1].x * (points[2].y - points[0].y) + points[2].x * (points[0].y - points[1].y)) * 0.5)
 
 	val lines: List<Line>
 		get() = listOf(

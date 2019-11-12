@@ -18,6 +18,12 @@ class ClosedPolygon(
 	}
 	val triangles: List<Triangle> by dirtyTriangles
 
+	override val perimeter: Double
+		get() = lines.sumByDouble { it.perimeter }
+
+	override val area: Double
+		get() = triangles.sumByDouble { it.area }
+
 	override val lines: List<Line>
 		get() {
 			val result = mutableListOf<Line>()
@@ -84,10 +90,9 @@ class ClosedPolygon(
 	}
 
 	override fun ease(other: Polygon, f: Float): ClosedPolygon {
-		if (other !is ClosedPolygon)
-			throw IllegalArgumentException()
-		if (points.size != other.points.size)
-			throw IllegalArgumentException()
+		require(other::class == ClosedPolygon::class)
+		// TODO: handle different number of points via splitting lines using the Lowest Common Multiple
+		require(points.size == other.points.size)
 		return ClosedPolygon(points.mapIndexed { index, point -> point.ease(other.points[index], f) })
 	}
 }
