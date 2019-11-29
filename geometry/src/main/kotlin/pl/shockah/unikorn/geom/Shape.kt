@@ -16,7 +16,7 @@ interface Shape {
 	val perimeter: Double
 
 	companion object {
-		val none = object : Filled {
+		val none = object: Filled {
 			override val boundingBox: Rectangle
 				get() = Rectangle(size = ImmutableVector2.zero)
 
@@ -44,7 +44,7 @@ interface Shape {
 			}
 		}
 
-		val infinitePlane = object : Filled {
+		val infinitePlane = object: Filled {
 			override val boundingBox: Rectangle
 				get() = Rectangle(
 						ImmutableVector2(-Double.MAX_VALUE, -Double.MAX_VALUE),

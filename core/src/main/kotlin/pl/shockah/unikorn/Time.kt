@@ -19,11 +19,7 @@ fun ScheduledExecutorService.schedule(time: Time, runnable: Runnable) {
 }
 
 fun ScheduledExecutorService.schedule(time: Time, closure: () -> Unit) {
-	schedule(object : Runnable {
-		override fun run() {
-			closure()
-		}
-	}, time.duration, time.unit)
+	schedule({ closure() }, time.duration, time.unit)
 }
 
 operator fun Date.plus(time: Time): Date {
