@@ -37,3 +37,11 @@ inline fun <T> MutableCollection<T>.removeFirst(predicate: (T) -> Boolean): Muta
 	}
 	return this
 }
+
+inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
+	var sum: Long = 0
+	for (element in this) {
+		sum += selector(element)
+	}
+	return sum
+}
