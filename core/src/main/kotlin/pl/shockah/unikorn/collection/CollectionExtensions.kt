@@ -1,5 +1,129 @@
 package pl.shockah.unikorn.collection
 
+fun <T: Comparable<T>> Array<T>.maxIndex(): Int? {
+	if (size == 0)
+		return null
+
+	var max = this[0]
+	var index = 0
+	for (i in 1 until size) {
+		if (this[i] > max) {
+			max = this[i]
+			index = i
+		}
+	}
+	return index
+}
+
+fun <T: Comparable<T>> List<T>.maxIndex(): Int? {
+	if (size == 0)
+		return null
+
+	var max = this[0]
+	var index = 0
+	for (i in 1 until size) {
+		if (this[i] > max) {
+			max = this[i]
+			index = i
+		}
+	}
+	return index
+}
+
+fun <T: Comparable<T>> Array<T>.minIndex(): Int? {
+	if (size == 0)
+		return null
+
+	var min = this[0]
+	var index = 0
+	for (i in 1 until size) {
+		if (this[i] < min) {
+			min = this[i]
+			index = i
+		}
+	}
+	return index
+}
+
+fun <T: Comparable<T>> List<T>.minIndex(): Int? {
+	if (size == 0)
+		return null
+
+	var min = this[0]
+	var index = 0
+	for (i in 1 until size) {
+		if (this[i] < min) {
+			min = this[i]
+			index = i
+		}
+	}
+	return index
+}
+
+inline fun <T, R: Comparable<R>> Array<out T>.maxIndexBy(selector: (T) -> R): Int? {
+	if (size == 0)
+		return null
+
+	var max = selector(this[0])
+	var index = 0
+	for (i in 1 until size) {
+		val value = selector(this[i])
+		if (value > max) {
+			max = value
+			index = i
+		}
+	}
+	return index
+}
+
+inline fun <T, R: Comparable<R>> List<T>.maxIndexBy(selector: (T) -> R): Int? {
+	if (size == 0)
+		return null
+
+	var max = selector(this[0])
+	var index = 0
+	for (i in 1 until size) {
+		val value = selector(this[i])
+		if (value > max) {
+			max = value
+			index = i
+		}
+	}
+	return index
+}
+
+inline fun <T, R: Comparable<R>> Array<out T>.minIndexBy(selector: (T) -> R): Int? {
+	if (size == 0)
+		return null
+
+	var min = selector(this[0])
+	var index = 0
+	for (i in 1 until size) {
+		val value = selector(this[i])
+		if (value < min) {
+			min = value
+			index = i
+		}
+	}
+	return index
+}
+
+inline fun <T, R: Comparable<R>> List<T>.minIndexBy(selector: (T) -> R): Int? {
+	if (size == 0)
+		return null
+
+	var min = selector(this[0])
+	var index = 0
+	for (i in 1 until size) {
+		val value = selector(this[i])
+		if (value < min) {
+			min = value
+			index = i
+		}
+	}
+	return index
+}
+
 inline fun <T> Iterable<T>.indexOfFirstOrNull(predicate: (T) -> Boolean): Int? {
 	return indexOfFirst(predicate).takeIf { it != -1 }
 }
