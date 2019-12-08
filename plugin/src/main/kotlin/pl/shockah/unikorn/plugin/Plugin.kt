@@ -99,7 +99,7 @@ open class Plugin(
 					}
 				}
 
-				object Any : Part() {
+				object Any: Part() {
 					override fun toString(): String {
 						return "*"
 					}

@@ -9,7 +9,7 @@ data class RGBColor(
 		val g: Float,
 		val b: Float
 ): BaseColor<RGBColor>() {
-	constructor(lightness: Float) : this(lightness, lightness, lightness)
+	constructor(lightness: Float): this(lightness, lightness, lightness)
 
 	companion object {
 		val white = RGBColor(1f)

@@ -16,7 +16,7 @@ class ImmutableVector2(
 
 	override val normalized by lazy { super.normalized }
 
-	constructor() : this(0.0, 0.0)
+	constructor(): this(0.0, 0.0)
 
 	companion object {
 		val zero = ImmutableVector2()

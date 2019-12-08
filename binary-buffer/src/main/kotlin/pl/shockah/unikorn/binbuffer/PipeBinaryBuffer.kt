@@ -23,7 +23,7 @@ class PipeBinaryBuffer private constructor(
 	override val readAvailable: Int
 		get() = lock.withLock { return readable.readAvailable }
 
-	val inputStream by lazy { object : InputStream() {
+	val inputStream by lazy { object: InputStream() {
 		override fun read(): Int {
 			lock.withLock {
 				while (readAvailable == 0) {
@@ -42,7 +42,7 @@ class PipeBinaryBuffer private constructor(
 		}
 	} }
 
-	val outputStream by lazy { object : OutputStream() {
+	val outputStream by lazy { object: OutputStream() {
 		override fun write(b: Int) {
 			writeByte(b.toByte())
 		}
@@ -62,7 +62,7 @@ class PipeBinaryBuffer private constructor(
 	} }
 
 	companion object {
-		operator fun <T> invoke(underlyingBuffer: T): PipeBinaryBuffer where T : BinaryBuffer.Readable, T : BinaryBuffer.Writable {
+		operator fun <T> invoke(underlyingBuffer: T): PipeBinaryBuffer where T: BinaryBuffer.Readable, T: BinaryBuffer.Writable {
 			return PipeBinaryBuffer(underlyingBuffer)
 		}
 	}

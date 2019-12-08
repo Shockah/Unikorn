@@ -2,7 +2,7 @@ package pl.shockah.unikorn.ease
 
 abstract class Easing {
 	companion object {
-		val linear = object : Easing() {
+		val linear = object: Easing() {
 			override fun ease(f: Float): Float {
 				return f
 			}
@@ -13,7 +13,7 @@ abstract class Easing {
 		return a + ease(f) * (b - a)
 	}
 
-	fun <T : Easable<T>> ease(a: T, b: T, f: Float): T {
+	fun <T: Easable<T>> ease(a: T, b: T, f: Float): T {
 		return a.ease(b, ease(f))
 	}
 

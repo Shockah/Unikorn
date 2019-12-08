@@ -18,7 +18,7 @@ object UnikornDelegates {
 	}
 
 	fun <T> observable(initialValue: T, onChange: (property: KProperty<*>, oldValue: T, newValue: T) -> Unit): ReadWriteProperty<Any?, T> {
-		return object : ObservableProperty<T>(initialValue) {
+		return object: ObservableProperty<T>(initialValue) {
 			override fun afterChange(property: KProperty<*>, oldValue: T, newValue: T) {
 				if (newValue != oldValue)
 					onChange(property, oldValue, newValue)

@@ -14,7 +14,7 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.isAccessible
 
-private val <T : Plugin> KClass<T>.possibleDependencyProperties: Collection<KMutableProperty1<T, out Plugin>>
+private val <T: Plugin> KClass<T>.possibleDependencyProperties: Collection<KMutableProperty1<T, out Plugin>>
 	get() = declaredMemberProperties.filter {
 		(it.returnType.classifier as? KClass<*>)?.isSubclassOf(Plugin::class) ?: false
 	}.filterIsInstance<KMutableProperty1<T, out Plugin>>()
@@ -24,7 +24,7 @@ class PluginManager(
 ) {
 	private val logger = KotlinLogging.logger { }
 
-	constructor(pluginDirectory: File) : this(PluginInfo.Provider.Default(pluginDirectory))
+	constructor(pluginDirectory: File): this(PluginInfo.Provider.Default(pluginDirectory))
 
 	private val lock = ReentrantLock()
 

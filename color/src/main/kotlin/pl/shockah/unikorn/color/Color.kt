@@ -4,7 +4,7 @@ import pl.shockah.unikorn.ease.Easable
 
 typealias Color = BaseColor<*>
 
-abstract class BaseColor<C : BaseColor<C>> : Easable<C> {
+abstract class BaseColor<C: BaseColor<C>>: Easable<C> {
 	abstract val rgb: RGBColor
 
 	abstract fun getDistance(other: C): Float

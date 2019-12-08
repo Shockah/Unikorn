@@ -4,7 +4,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class LateInitAwaitable<T>(): ReadWriteProperty<Any?, T> {
-	constructor(listener: (property: LateInitAwaitable<T>, oldValue: T?, newValue: T) -> Unit) : this() {
+	constructor(listener: (property: LateInitAwaitable<T>, oldValue: T?, newValue: T) -> Unit): this() {
 		listeners += listener
 	}
 

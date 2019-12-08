@@ -29,7 +29,7 @@ class ViewVariable(
 class ViewVariableProvider {
 	operator fun provideDelegate(thisRef: View, property: KProperty<*>): ReadOnlyProperty<View, ViewVariable> {
 		val variable = ViewVariable(thisRef, property.name)
-		return object : ReadOnlyProperty<View, ViewVariable> {
+		return object: ReadOnlyProperty<View, ViewVariable> {
 			override fun getValue(thisRef: View, property: KProperty<*>): ViewVariable {
 				return variable
 			}

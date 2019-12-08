@@ -7,7 +7,7 @@ import kotlin.math.sqrt
 
 typealias Vector2 = BaseVector2<*>
 
-abstract class BaseVector2<T : BaseVector2<T>> : Comparable<BaseVector2<*>>, Easable<BaseVector2<*>> {
+abstract class BaseVector2<T: BaseVector2<T>>: Comparable<BaseVector2<*>>, Easable<BaseVector2<*>> {
 	abstract val x: Double
 	abstract val y: Double
 

@@ -2,8 +2,8 @@ package pl.shockah.unikorn.plugin
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
-import pl.shockah.unikorn.guard
 import pl.shockah.unikorn.collection.mapValid
+import pl.shockah.unikorn.guard
 import java.io.File
 import java.io.IOException
 import java.net.URL
@@ -57,7 +57,7 @@ data class PluginInfo(
 
 		class Default(
 				val pluginsDirectory: File
-		) : Provider {
+		): Provider {
 			override fun provide(): List<PluginInfo> {
 				return (pluginsDirectory.listFiles() ?: emptyArray()).filter { it.extension == "jar" }.mapValid { PluginInfo(it.absoluteFile.normalize()) }
 			}

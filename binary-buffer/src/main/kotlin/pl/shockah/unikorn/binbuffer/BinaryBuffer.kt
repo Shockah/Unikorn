@@ -3,7 +3,7 @@ package pl.shockah.unikorn.binbuffer
 import java.nio.ByteBuffer
 
 fun BinaryBuffer.Readable.asData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Readable.Data {
-	return object : BinaryBuffer.Readable.Data {
+	return object: BinaryBuffer.Readable.Data {
 		override val readAvailable: Int
 			get() = this@asData.readAvailable
 
@@ -17,7 +17,7 @@ fun BinaryBuffer.Readable.asData(endianness: Endianness = Endianness.LittleEndia
 }
 
 fun BinaryBuffer.Writable.asData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Writable.Data {
-	return object : BinaryBuffer.Writable.Data {
+	return object: BinaryBuffer.Writable.Data {
 		override val endianness: Endianness
 			get() = endianness
 

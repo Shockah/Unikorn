@@ -64,7 +64,7 @@ open class CircularListImpl<E> internal constructor(): Collection<E> {
 		return Iterator()
 	}
 
-	open inner class Iterator : kotlin.collections.Iterator<E> {
+	open inner class Iterator: kotlin.collections.Iterator<E> {
 		internal var currentNode: Node? = null
 		protected var index = 0
 
@@ -80,7 +80,7 @@ open class CircularListImpl<E> internal constructor(): Collection<E> {
 	}
 }
 
-class MutableCircularListImpl<E> : CircularListImpl<E>(), MutableCircularList<E> {
+class MutableCircularListImpl<E>: CircularListImpl<E>(), MutableCircularList<E> {
 	override fun addNext(element: E) {
 		val newNode = Node(element)
 		val root = root
@@ -216,7 +216,7 @@ class MutableCircularListImpl<E> : CircularListImpl<E>(), MutableCircularList<E>
 		this.root = current
 	}
 
-	inner class MutableIterator : Iterator(), kotlin.collections.MutableIterator<E> {
+	inner class MutableIterator: Iterator(), kotlin.collections.MutableIterator<E> {
 		private var removed = true
 
 		override fun remove() {

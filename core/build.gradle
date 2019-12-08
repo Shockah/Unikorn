@@ -1,5 +1,4 @@
 dependencies {
-	compile 'io.github.microutils:kotlin-logging:1.6.26'
 }
 
 test {

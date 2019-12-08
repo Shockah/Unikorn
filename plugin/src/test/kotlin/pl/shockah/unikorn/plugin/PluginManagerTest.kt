@@ -55,7 +55,7 @@ class PluginManagerTest {
 	}
 
 	private fun getPluginManager(vararg pluginNames: String): PluginManager {
-		return PluginManager(object : PluginInfo.Provider {
+		return PluginManager(object: PluginInfo.Provider {
 			override fun provide(): List<PluginInfo> {
 				return pluginNames.map { pluginInfos[it]!! }
 			}

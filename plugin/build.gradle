@@ -1,6 +1,7 @@
 dependencies {
-	compile project(':core')
-	compile 'com.beust:klaxon:5.0.5'
+	implementation project(':core')
+	implementation 'com.beust:klaxon:5.0.5'
+	implementation 'io.github.microutils:kotlin-logging:1.6.26'
 }
 
 test {

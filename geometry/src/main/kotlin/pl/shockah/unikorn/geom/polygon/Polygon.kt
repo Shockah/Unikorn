@@ -15,7 +15,7 @@ open class Polygon(
 ): Shape, Easable<Polygon> {
 	val points: ObservableList<MutableVector2> = ObservableList(points.map { it.mutableCopy() }.toMutableList())
 
-	constructor(vararg points: Vector2) : this(points.toMutableList())
+	constructor(vararg points: Vector2): this(points.toMutableList())
 
 	override val boundingBox: Rectangle
 		get() {

@@ -33,7 +33,7 @@ operator fun Date.minus(other: Date): Time {
 data class Time(
 		val duration: Long,
 		val unit: TimeUnit
-) : Comparable<Time> {
+): Comparable<Time> {
 	companion object {
 		val NONE: Time = Time(0, TimeUnit.SECONDS)
 	}

@@ -1,4 +1,4 @@
 dependencies {
-	compileOnly project(':core')
-	compileOnly project(':plugin')
+	implementation project(':core')
+	implementation project(':plugin')
 }

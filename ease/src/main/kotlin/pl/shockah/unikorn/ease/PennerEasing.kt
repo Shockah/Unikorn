@@ -4,17 +4,17 @@ import kotlin.math.*
 
 abstract class PennerEasing: Easing() {
 	companion object {
-		val quadIn = object : PennerEasing() {
+		val quadIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return f * f
 			}
 		}
-		val quadOut = object : PennerEasing() {
+		val quadOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return -(f * (f - 2))
 			}
 		}
-		val quadInOut = object : PennerEasing() {
+		val quadInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f)
 					2 * f * f
@@ -23,17 +23,17 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val cubicIn = object : PennerEasing() {
+		val cubicIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return f * f * f
 			}
 		}
-		val cubicOut = object : PennerEasing() {
+		val cubicOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return cubicIn.ease(f - 1) + 1
 			}
 		}
-		val cubicInOut = object : PennerEasing() {
+		val cubicInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f) {
 					4 * f * f * f
@@ -44,18 +44,18 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val quarticIn = object : PennerEasing() {
+		val quarticIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return f * f * f * f
 			}
 		}
-		val quarticOut = object : PennerEasing() {
+		val quarticOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				val f2 = f - 1
 				return f2 * f2 * f2 * (1 - f) + 1
 			}
 		}
-		val quarticInOut = object : PennerEasing() {
+		val quarticInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f) {
 					8 * f * f * f * f
@@ -66,17 +66,17 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val quinticIn = object : PennerEasing() {
+		val quinticIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return f * f * f * f * f
 			}
 		}
-		val quinticOut = object : PennerEasing() {
+		val quinticOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return quinticIn.ease(f - 1) + 1
 			}
 		}
-		val quinticInOut = object : PennerEasing() {
+		val quinticInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f) {
 					16 * f * f * f * f * f
@@ -87,33 +87,33 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val sineIn = object : PennerEasing() {
+		val sineIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return sin((f - 1) * PI * 0.5f).toFloat() + 1
 			}
 		}
-		val sineOut = object : PennerEasing() {
+		val sineOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return sin(f * PI * 0.5f).toFloat()
 			}
 		}
-		val sineInOut = object : PennerEasing() {
+		val sineInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return 0.5f * (1 - cos(f * PI).toFloat())
 			}
 		}
 
-		val circularIn = object : PennerEasing() {
+		val circularIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return 1 - sqrt(1 - f * f)
 			}
 		}
-		val circularOut = object : PennerEasing() {
+		val circularOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return sqrt((2 - f) * f)
 			}
 		}
-		val circularInOut = object : PennerEasing() {
+		val circularInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f)
 					0.5f * (1 - sqrt(1 - 4 * (f * f)))
@@ -122,17 +122,17 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val exponentialIn = object : PennerEasing() {
+		val exponentialIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f == 0f) f else 2.0.pow(10.0 * (f - 1)).toFloat()
 			}
 		}
-		val exponentialOut = object : PennerEasing() {
+		val exponentialOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f == 1f) f else 1 - 2.0.pow(-10.0 * f).toFloat()
 			}
 		}
-		val exponentialInOut = object : PennerEasing() {
+		val exponentialInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				if (f == 0f || f == 1f)
 					return f
@@ -144,17 +144,17 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val elasticIn = object : PennerEasing() {
+		val elasticIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return sin(13 * PI * 0.5f * f).toFloat() * 2.0.pow(10.0 * (f - 1)).toFloat()
 			}
 		}
-		val elasticOut = object : PennerEasing() {
+		val elasticOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return sin(-13 * PI * 0.5f * (f + 1)).toFloat() * 2.0.pow(-10.0 * f).toFloat() + 1
 			}
 		}
-		val elasticInOut = object : PennerEasing() {
+		val elasticInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f)
 					0.5f * sin(13 * PI * 0.5f * (2 * f)).toFloat() * 2.0.pow(10.0 * (2 * f - 1)).toFloat()
@@ -163,17 +163,17 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val backIn = object : PennerEasing() {
+		val backIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return f * f * f - f * sin(f * PI).toFloat()
 			}
 		}
-		val backOut = object : PennerEasing() {
+		val backOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return 1f - backIn.ease(1 - f)
 			}
 		}
-		val backInOut = object : PennerEasing() {
+		val backInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f) {
 					val f2 = 2 * f
@@ -185,12 +185,12 @@ abstract class PennerEasing: Easing() {
 			}
 		}
 
-		val bounceIn = object : PennerEasing() {
+		val bounceIn = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return 1f - bounceOut.ease(1 - f)
 			}
 		}
-		val bounceOut = object : PennerEasing() {
+		val bounceOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return when {
 					f < 4f / 11f -> (121 * f * f) / 16f
@@ -200,7 +200,7 @@ abstract class PennerEasing: Easing() {
 				}
 			}
 		}
-		val bounceInOut = object : PennerEasing() {
+		val bounceInOut = object: PennerEasing() {
 			override fun ease(f: Float): Float {
 				return if (f < 0.5f)
 					0.5f * bounceIn.ease(f * 2)

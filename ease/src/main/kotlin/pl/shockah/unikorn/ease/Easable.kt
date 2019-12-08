@@ -1,10 +1,10 @@
 package pl.shockah.unikorn.ease
 
-fun <T : Easable<T>> T.ease(other: T, easing: Easing, f: Float): T {
+fun <T: Easable<T>> T.ease(other: T, easing: Easing, f: Float): T {
 	return easing.ease(this, other, f)
 }
 
-fun <T : Easable<T>> Float.ease(a: T, b: T): T {
+fun <T: Easable<T>> Float.ease(a: T, b: T): T {
 	return a.ease(b, this)
 }
 
@@ -16,11 +16,11 @@ fun Float.ease(other: Float, easing: Easing, f: Float): Float {
 	return easing.ease(this, other, f)
 }
 
-fun <T> ClosedRange<T>.ease(f: Float): T where T : Easable<T>, T : Comparable<T> {
+fun <T> ClosedRange<T>.ease(f: Float): T where T: Easable<T>, T: Comparable<T> {
 	return f.ease(start, endInclusive)
 }
 
-fun <T> ClosedRange<T>.ease(easing: Easing, f: Float): T where T : Easable<T>, T : Comparable<T> {
+fun <T> ClosedRange<T>.ease(easing: Easing, f: Float): T where T: Easable<T>, T: Comparable<T> {
 	return easing.ease(start, endInclusive, f)
 }
 
@@ -32,11 +32,11 @@ fun ClosedRange<Float>.ease(easing: Easing, f: Float): Float {
 	return easing.ease(start, endInclusive, f)
 }
 
-fun <T> Pair<T, T>.ease(f: Float): T where T : Easable<T> {
+fun <T> Pair<T, T>.ease(f: Float): T where T: Easable<T> {
 	return f.ease(first, second)
 }
 
-fun <T : Easable<T>> Pair<T, T>.ease(easing: Easing, f: Float): T {
+fun <T: Easable<T>> Pair<T, T>.ease(easing: Easing, f: Float): T {
 	return easing.ease(first, second, f)
 }
 

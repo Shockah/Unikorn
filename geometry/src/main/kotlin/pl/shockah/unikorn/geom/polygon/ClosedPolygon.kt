@@ -33,10 +33,10 @@ class ClosedPolygon(
 			return result
 		}
 
-	constructor(vararg points: Vector2) : this(points.toList())
+	constructor(vararg points: Vector2): this(points.toList())
 
 	init {
-		super.points.listeners += object : ObservableList.ChangeListener<MutableVector2> {
+		super.points.listeners += object: ObservableList.ChangeListener<MutableVector2> {
 			override fun onAddedToList(element: MutableVector2) {
 				dirtyTriangles.invalidate()
 			}

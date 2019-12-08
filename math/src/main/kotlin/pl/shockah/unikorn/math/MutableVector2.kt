@@ -4,7 +4,7 @@ open class MutableVector2(
 		override var x: Double,
 		override var y: Double
 ): BaseVector2<MutableVector2>() {
-	constructor() : this(0.0, 0.0)
+	constructor(): this(0.0, 0.0)
 
 	companion object {
 		operator fun invoke(angle: Angle, length: Double): MutableVector2 {

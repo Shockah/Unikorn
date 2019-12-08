@@ -78,12 +78,12 @@ interface Shape {
 		@PublishedApi
 		internal val collisionHandlers: MutableMap<Pair<KClass<out Shape>, KClass<out Shape>>, (Shape, Shape) -> Boolean> = mutableMapOf()
 
-		inline fun <reified A : Shape, reified B : Shape> registerCollisionHandler(noinline handler: (A, B) -> Boolean) {
+		inline fun <reified A: Shape, reified B: Shape> registerCollisionHandler(noinline handler: (A, B) -> Boolean) {
 			@Suppress("UNCHECKED_CAST")
 			collisionHandlers[Pair(A::class, B::class)] = handler as ((Shape, Shape) -> Boolean)
 		}
 
-		fun <A : Shape, B : Shape> shapesCollide(first: A, second: B): Boolean {
+		fun <A: Shape, B: Shape> shapesCollide(first: A, second: B): Boolean {
 			val handler = findHandler(first::class, second::class)
 			if (handler != null)
 				return handler(first, second)

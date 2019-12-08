@@ -33,7 +33,7 @@ class MultiObservableProperty<T>(
 	}
 
 	fun addObserver(closure: (property: KProperty<*>, oldValue: T, newValue: T) -> Unit): Observer<T> {
-		val observer = object : Observer<T> {
+		val observer = object: Observer<T> {
 			override fun onValueChanged(property: KProperty<*>, oldValue: T, newValue: T) {
 				closure(property, oldValue, newValue)
 			}

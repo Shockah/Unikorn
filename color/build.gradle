@@ -1,7 +1,7 @@
 dependencies {
-	compile project(':core')
-	compile project(':ease')
-	compile project(':math')
+	implementation project(':core')
+	api project(':ease')
+	api project(':math')
 }
 
 test {
