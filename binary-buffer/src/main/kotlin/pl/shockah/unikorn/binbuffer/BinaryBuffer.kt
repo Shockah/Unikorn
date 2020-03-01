@@ -205,6 +205,11 @@ interface BinaryBuffer {
 			fun writeString(v: String, charset: Charset = Charsets.UTF_8) {
 				writeByteArray(v.toByteArray(charset))
 			}
+
+			private class Wrapper(
+					private val wrapped: Writable,
+					override val endianness: Endianness
+			): Writable by wrapped, Data
 		}
 	}
 
@@ -217,4 +222,47 @@ interface BinaryBuffer {
 
 		fun clear()
 	}
+}
+
+private class ReadableWrapper(
+		private val wrapped: BinaryBuffer.Readable,
+		override val endianness: Endianness = Endianness.LittleEndian
+): BinaryBuffer.Readable by wrapped, BinaryBuffer.Readable.Data
+
+private class WritableWrapper(
+		private val wrapped: BinaryBuffer.Writable,
+		override val endianness: Endianness = Endianness.LittleEndian
+): BinaryBuffer.Writable by wrapped, BinaryBuffer.Writable.Data
+
+class ReadableWritableBinaryBufferDataWrapper internal constructor(
+		private val wrappedReadable: BinaryBuffer.Readable,
+		private val wrappedWritable: BinaryBuffer.Writable,
+		override val endianness: Endianness = Endianness.LittleEndian
+): BinaryBuffer.Readable by wrappedReadable, BinaryBuffer.Writable by wrappedWritable, BinaryBuffer.Readable.Data, BinaryBuffer.Writable.Data {
+	companion object {
+		operator fun <B> invoke(
+				wrapped: B,
+				endianness: Endianness = Endianness.LittleEndian
+		): ReadableWritableBinaryBufferDataWrapper where B: BinaryBuffer.Readable, B: BinaryBuffer.Writable {
+			return ReadableWritableBinaryBufferDataWrapper(wrapped, wrapped, endianness)
+		}
+	}
+}
+
+fun BinaryBuffer.Readable.toData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Readable.Data {
+	if (this is BinaryBuffer.Readable.Data)
+		return this
+	else
+		return ReadableWrapper(this, endianness)
+}
+
+fun BinaryBuffer.Writable.toData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Writable.Data {
+	if (this is BinaryBuffer.Writable.Data)
+		return this
+	else
+		return WritableWrapper(this, endianness)
+}
+
+fun <B> B.toData(endianness: Endianness = Endianness.LittleEndian): ReadableWritableBinaryBufferDataWrapper where B: BinaryBuffer.Readable, B: BinaryBuffer.Writable {
+	return ReadableWritableBinaryBufferDataWrapper(this, endianness)
 }
