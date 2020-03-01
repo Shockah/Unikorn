@@ -1,6 +1,7 @@
 package pl.shockah.unikorn.binbuffer
 
 import java.nio.ByteBuffer
+import java.nio.charset.Charset
 
 fun BinaryBuffer.Readable.asData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Readable.Data {
 	return object: BinaryBuffer.Readable.Data {
@@ -109,6 +110,14 @@ interface BinaryBuffer {
 			fun readDouble(): Double {
 				return java.lang.Double.longBitsToDouble(readLong())
 			}
+
+			fun readByteArray(): ByteArray {
+				return readBytes(readInt())
+			}
+
+			fun readString(charset: Charset = Charsets.UTF_8): String {
+				return String(readByteArray(), charset)
+			}
 		}
 	}
 
@@ -186,6 +195,15 @@ interface BinaryBuffer {
 
 			fun writeDouble(v: Double) {
 				writeLong(java.lang.Double.doubleToLongBits(v))
+			}
+
+			fun writeByteArray(v: ByteArray) {
+				writeInt(v.size)
+				writeBytes(v)
+			}
+
+			fun writeString(v: String, charset: Charset = Charsets.UTF_8) {
+				writeByteArray(v.toByteArray(charset))
 			}
 		}
 	}
