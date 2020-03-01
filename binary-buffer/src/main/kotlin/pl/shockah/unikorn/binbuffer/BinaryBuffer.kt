@@ -179,6 +179,14 @@ interface BinaryBuffer {
 			fun writeULong(v: ULong) {
 				writeLong(v.toLong(), 8)
 			}
+
+			fun writeFloat(v: Float) {
+				writeInt(java.lang.Float.floatToIntBits(v))
+			}
+
+			fun writeDouble(v: Double) {
+				writeLong(java.lang.Double.doubleToLongBits(v))
+			}
 		}
 	}
 
