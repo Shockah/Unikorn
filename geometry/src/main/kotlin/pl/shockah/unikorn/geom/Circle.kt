@@ -34,7 +34,7 @@ class Circle(
 				(b.position - a.position).length < b.radius + a.radius
 			}
 			Shape.registerCollisionHandler { circle: Circle, line: Line ->
-				line.point1 in circle || line.point2 in circle || !(circle intersect line).isEmpty()
+				line.point1 in circle || line.point2 in circle || (circle intersect line).isNotEmpty()
 			}
 			Shape.registerCollisionHandler { circle: Circle, rectangle: Rectangle ->
 				val testPoint = circle.position.mutableCopy()

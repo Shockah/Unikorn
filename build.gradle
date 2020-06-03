@@ -19,6 +19,16 @@ subprojects {
 		maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
 	}
 
+	compileKotlin {
+		kotlinOptions {
+			javaParameters = true
+			freeCompilerArgs = [
+					'-Xuse-experimental=kotlin.ExperimentalUnsignedTypes',
+					'-XXLanguage:+InlineClasses'
+			]
+		}
+	}
+
 	dependencies {
 		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 		implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
@@ -30,10 +40,5 @@ subprojects {
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         jvmTarget = "1.8"
-        javaParameters = true
-		freeCompilerArgs = [
-				'-Xuse-experimental=kotlin.ExperimentalUnsignedTypes',
-				'-XXLanguage:+InlineClasses'
-		]
     }
 }

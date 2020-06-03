@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName")
+
 package pl.shockah.unikorn.geom.polygon
 
 import pl.shockah.unikorn.geom.Triangle
