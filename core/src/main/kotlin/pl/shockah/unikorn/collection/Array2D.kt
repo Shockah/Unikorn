@@ -64,7 +64,7 @@ class MutableArray2D<T> @PublishedApi internal constructor(
 ): Array2D<T>(width, height, values) {
 	companion object {
 		inline operator fun <reified T: Any?> invoke(width: Int, height: Int): MutableArray2D<T?> {
-			return MutableArray2D(width, height, Array(width * height) { null as T? })
+			return MutableArray2D(width, height, Array(width * height) { null })
 		}
 
 		inline operator fun <reified T> invoke(width: Int, height: Int, fill: T): MutableArray2D<T> {
