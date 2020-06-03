@@ -9,7 +9,7 @@ class LazyComponentStorage<T>(
 }
 
 class LazyComponentStorageFactory(
-		val mode: LazyThreadSafetyMode = LazyThreadSafetyMode.SYNCHRONIZED
+		private val mode: LazyThreadSafetyMode = LazyThreadSafetyMode.SYNCHRONIZED
 ): ComponentStorageFactory {
 	override fun <T> createComponentStorage(resolver: Resolver, factory: (Resolver) -> T): ComponentStorage<T> {
 		return LazyComponentStorage(resolver, factory, mode)

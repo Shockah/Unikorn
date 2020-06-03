@@ -13,7 +13,7 @@ class LazyComponentStorageTest {
 
 	@Test
 	fun test() {
-		val storageFactory = LazyComponentStorageFactory()
+		val storageFactory = LazyComponentStorageFactory(LazyThreadSafetyMode.NONE)
 		val storage = storageFactory.createComponentStorage(BlankResolver()) { Object() }
 
 		val firstInstance = storage.component
