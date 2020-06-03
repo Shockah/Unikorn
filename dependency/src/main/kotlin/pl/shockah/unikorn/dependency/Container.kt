@@ -23,7 +23,7 @@ class Container(
 		return handle
 	}
 
-	fun <T: Any> unregister(handle: ComponentHandle<T>) {
+	fun unregister(handle: ComponentHandle<*>) {
 		val type = componentHandleToType[handle]
 		if (type != null) {
 			componentHandleToType.remove(handle)
