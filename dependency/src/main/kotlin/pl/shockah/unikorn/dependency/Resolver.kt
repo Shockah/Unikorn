@@ -2,8 +2,7 @@ package pl.shockah.unikorn.dependency
 
 import kotlin.reflect.KClass
 
-class MissingComponentException: Exception() {
-}
+class MissingComponentException: Exception()
 
 interface Resolver {
 	/**
