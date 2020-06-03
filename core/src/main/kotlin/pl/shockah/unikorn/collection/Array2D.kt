@@ -24,6 +24,15 @@ open class Array2D<T> @PublishedApi internal constructor(
 		return values[getIndex(x, y)]
 	}
 
+	operator fun get(xRange: IntRange, yRange: IntRange): Array2D<T> {
+		val width = xRange.last - xRange.first + 1
+		val height = yRange.last - yRange.first + 1
+		val list = ArrayList<T>(width * height)
+		(0..(width * height)).forEach { list.add(this[xRange.first + it % width, yRange.first + it % height]) }
+		@Suppress("UNCHECKED_CAST")
+		return Array2D(width, height, list.toArray() as Array<T>)
+	}
+
 	override fun equals(other: Any?): Boolean {
 		return other is Array2D<*> && other.width == width && other.height == height && other.values.contentEquals(values)
 	}
@@ -78,5 +87,13 @@ class MutableArray2D<T> @PublishedApi internal constructor(
 
 	operator fun set(x: Int, y: Int, value: T) {
 		values[getIndex(x, y)] = value
+	}
+
+	operator fun set(xRange: IntRange, yRange: IntRange, value: T) {
+		for (y in yRange) {
+			for (x in xRange) {
+				this[x, y] = value
+			}
+		}
 	}
 }
