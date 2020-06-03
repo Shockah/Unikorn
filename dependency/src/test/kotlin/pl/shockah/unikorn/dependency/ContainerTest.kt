@@ -10,10 +10,10 @@ class ContainerTest {
 	fun testRegisterAndUnregister() {
 		val container = Container(defaultComponentStorageFactory = storageFactory)
 
-		val handle = container.register(Object())
+		container.register(Object())
 		Assertions.assertDoesNotThrow { container[Object::class] }
 
-		container.unregister(handle)
+		container.unregister(Object::class)
 		Assertions.assertThrows(MissingComponentException::class.java) { container[Object::class] }
 	}
 }

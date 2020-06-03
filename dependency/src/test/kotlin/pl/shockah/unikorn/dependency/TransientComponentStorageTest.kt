@@ -2,11 +2,10 @@ package pl.shockah.unikorn.dependency
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import kotlin.reflect.KClass
 
 class TransientComponentStorageTest {
 	private class BlankResolver: Resolver {
-		override fun <T: Any> resolve(type: KClass<in T>): T {
+		override fun <T: Any, Key> resolve(id: ComponentId<T, Key>): T {
 			throw MissingComponentException()
 		}
 	}
