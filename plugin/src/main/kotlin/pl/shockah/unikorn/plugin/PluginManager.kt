@@ -8,7 +8,9 @@ import java.util.*
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KParameter
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubclassOf
@@ -20,7 +22,8 @@ private val <T: Plugin> KClass<T>.possibleDependencyProperties: Collection<KMuta
 	}.filterIsInstance<KMutableProperty1<T, out Plugin>>()
 
 class PluginManager(
-		infoProvider: PluginInfo.Provider
+		infoProvider: PluginInfo.Provider,
+		additionalPluginConstructorParameterHandlers: List<PluginConstructorParameterHandler> = emptyList()
 ) {
 	private val logger = KotlinLogging.logger { }
 
@@ -33,6 +36,12 @@ class PluginManager(
 	private val plugins = mutableListOf<Plugin>()
 
 	private val loadQueue = LinkedList<PluginInfo>()
+
+	private val pluginConstructorParameterHandlers: List<PluginConstructorParameterHandler> = listOf(
+			PluginManagerPluginConstructorParameterHandler(),
+			PluginInfoPluginConstructorParameterHandler(),
+			PluginDependencyPluginConstructorParameterHandler()
+	) + additionalPluginConstructorParameterHandlers
 
 	init {
 		pluginInfos.forEach {
@@ -136,20 +145,17 @@ class PluginManager(
 			val clazz = classLoader.loadClass(info.pluginClassName).kotlin as KClass<out Plugin>
 
 			clazz.constructors.forEach { ctor ->
-				return ctor.call(*ctor.parameters.map { param ->
-					if (param.type.isMarkedNullable)
-						return@forEach
-
-					val classifier = param.type.classifier
-					@Suppress("IMPLICIT_CAST_TO_ANY", "ControlFlowWithEmptyBody")
-					when (classifier) {
-						PluginManager::class -> return@map this
-						PluginInfo::class -> return@map info
-						is KClass<*> -> return@map plugins.firstOrNull { classifier.isInstance(it) }
-								?: throw NoSuchMethodException("Unknown dependency ${classifier.qualifiedName} required for ${info.identifier}")
-						else -> if (!param.isOptional) return@forEach else { }
+				val callParameters = mutableMapOf<KParameter, Any?>()
+				for (parameter in ctor.parameters) {
+					for (handler in pluginConstructorParameterHandlers) {
+						try {
+							callParameters[parameter] = handler.handleConstructorParameter(info, ctor, parameter)
+							break
+						} catch (_: PluginConstructorParameterHandler.UnhandledParameter) {
+						}
 					}
-				}.toTypedArray())
+				}
+				return ctor.callBy(callParameters)
 			}
 
 			throw NoSuchMethodException("Missing plugin constructor for ${info.identifier}")
@@ -213,6 +219,41 @@ class PluginManager(
 				logger.info { "Unloaded $it" }
 			}
 			plugins.clear()
+		}
+	}
+
+	private inner class PluginManagerPluginConstructorParameterHandler: PluginConstructorParameterHandler {
+		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any? {
+			if (parameter.type.classifier == PluginManager::class) {
+				return this@PluginManager
+			} else {
+				return super.handleConstructorParameter(pluginInfo, constructor, parameter)
+			}
+		}
+	}
+
+	private class PluginInfoPluginConstructorParameterHandler: PluginConstructorParameterHandler {
+		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any? {
+			if (parameter.type.classifier == PluginInfo::class) {
+				return pluginInfo
+			} else {
+				return super.handleConstructorParameter(pluginInfo, constructor, parameter)
+			}
+		}
+	}
+
+	private inner class PluginDependencyPluginConstructorParameterHandler: PluginConstructorParameterHandler {
+		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any? {
+			val classifier = parameter.type.classifier
+			if (classifier is KClass<*>) {
+				for (plugin in plugins) {
+					if (classifier.isInstance(plugin))
+						return plugin
+				}
+				if (parameter.type.isMarkedNullable && classifier.isSubclassOf(Plugin::class))
+					return null
+			}
+			return super.handleConstructorParameter(pluginInfo, constructor, parameter)
 		}
 	}
 }
