@@ -13,8 +13,8 @@ class ParentContainerTest {
 
 		parentContainer.register(Object())
 
-		val parentInstance = parentContainer[Object::class]
-		val childInstance = childContainer[Object::class]
+		val parentInstance = parentContainer.resolve(Object::class)
+		val childInstance = childContainer.resolve(Object::class)
 
 		Assertions.assertEquals(parentInstance, childInstance)
 	}
@@ -26,8 +26,8 @@ class ParentContainerTest {
 
 		childContainer.register(Object())
 
-		Assertions.assertDoesNotThrow { childContainer[Object::class] }
-		Assertions.assertThrows(MissingComponentException::class.java) { parentContainer[Object::class] }
+		Assertions.assertDoesNotThrow { childContainer.resolve(Object::class) }
+		Assertions.assertThrows(MissingComponentException::class.java) { parentContainer.resolve(Object::class) }
 	}
 
 	@Test
@@ -38,8 +38,8 @@ class ParentContainerTest {
 		parentContainer.register(Object())
 		childContainer.register(Object())
 
-		val parentInstance = parentContainer[Object::class]
-		val childInstance = childContainer[Object::class]
+		val parentInstance = parentContainer.resolve(Object::class)
+		val childInstance = childContainer.resolve(Object::class)
 
 		Assertions.assertNotEquals(parentInstance, childInstance)
 	}

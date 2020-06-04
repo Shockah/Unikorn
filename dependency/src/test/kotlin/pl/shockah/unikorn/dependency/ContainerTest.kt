@@ -11,9 +11,9 @@ class ContainerTest {
 		val container = Container(defaultComponentStorageFactory = storageFactory)
 
 		container.register(Object())
-		Assertions.assertDoesNotThrow { container[Object::class] }
+		Assertions.assertDoesNotThrow { container.resolve(Object::class) }
 
 		container.unregister(Object::class)
-		Assertions.assertThrows(MissingComponentException::class.java) { container[Object::class] }
+		Assertions.assertThrows(MissingComponentException::class.java) { container.resolve(Object::class) }
 	}
 }
