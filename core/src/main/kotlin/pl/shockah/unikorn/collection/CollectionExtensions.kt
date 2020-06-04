@@ -229,3 +229,7 @@ inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {
 	}
 	return sum
 }
+
+fun <K, V> MutableMap<K, V>.withLazyInitializer(initializer: (key: K) -> V): MutableMap<K, V> {
+	return LazyInitialValueMutableMap(this, initializer)
+}
