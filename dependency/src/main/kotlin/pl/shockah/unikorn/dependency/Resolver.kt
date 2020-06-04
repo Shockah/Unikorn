@@ -35,22 +35,6 @@ fun <T: Any> Resolver.resolve(type: KClass<T>): T {
  * @return requested component if available
  * @throws MissingComponentException if a component is not available
  */
-operator fun <T: Any, Key> Resolver.get(id: ComponentId<T, Key>): T {
-	return resolve(id)
-}
-
-/**
- * @return requested component if available
- * @throws MissingComponentException if a component is not available
- */
-operator fun <T: Any> Resolver.get(type: KClass<T>): T {
-	return resolve(type)
-}
-
-/**
- * @return requested component if available
- * @throws MissingComponentException if a component is not available
- */
 inline fun <reified T: Any> Resolver.resolve(): T {
 	return resolve(T::class)
 }
