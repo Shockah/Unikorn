@@ -20,10 +20,10 @@ open class Polygon(
 	override val boundingBox: Rectangle
 		get() {
 			val (minX, minY, maxX, maxY) = guard(
-					points.map { it.x }::min,
-					points.map { it.y }::min,
-					points.map { it.x }::max,
-					points.map { it.y }::max
+					points.map { it.x }::minOrNull,
+					points.map { it.y }::minOrNull,
+					points.map { it.x }::maxOrNull,
+					points.map { it.y }::maxOrNull
 			) {
 				return Rectangle(size = ImmutableVector2.zero)
 			}
