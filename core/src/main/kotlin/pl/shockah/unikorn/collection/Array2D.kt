@@ -7,12 +7,28 @@ open class Array2D<T> @PublishedApi internal constructor(
 		protected val values: Array<T>
 ) {
 	companion object {
+		val cardinalNeighborIndexes = setOf(-1 to 0, 1 to 0, 0 to -1, 0 to 1)
+		val cardinalAndDiagonalNeighborIndexes = cardinalNeighborIndexes + setOf(-1 to -1, -1 to 1, 1 to -1, 1 to 1)
+
 		inline operator fun <reified T> invoke(width: Int, height: Int, fill: T): Array2D<T> {
 			return Array2D(width, height, Array(width * height) { fill })
 		}
 
 		inline operator fun <reified T> invoke(width: Int, height: Int, init: (x: Int, y: Int) -> T): Array2D<T> {
 			return Array2D(width, height, Array(width * height) { init(it % width, it / width) })
+		}
+
+		fun <T, R> neighborCountPredicate(
+			neighborIndexes: Set<Pair<Int, Int>>,
+			outOfBoundsPasses: Boolean = false,
+			predicateFunction: (neighbor: T) -> Boolean,
+			mappingFunction: (element: T, count: Int) -> R
+		): ((array: Array2D<T>, x: Int, y: Int, element: T) -> R) {
+			return closure@ { array, x, y, element ->
+				val indexes = neighborIndexes.map { it.first + x to it.second + y }.toSet()
+				val count = array.count(indexes, outOfBoundsPasses, predicateFunction)
+				return@closure mappingFunction(element, count)
+			}
 		}
 	}
 
@@ -45,6 +61,23 @@ open class Array2D<T> @PublishedApi internal constructor(
 			}
 		}
 		return result
+	}
+
+	inline fun <reified R> map(mappingFunction: (element: T) -> R): Array2D<R> {
+		return Array2D(width, height) { x, y -> mappingFunction(this[x, y]) }
+	}
+
+	inline fun <reified R> map(mappingFunction: (array: Array2D<T>, x: Int, y: Int, element: T) -> R): Array2D<R> {
+		return Array2D(width, height) { x, y -> mappingFunction(this, x, y, this[x, y]) }
+	}
+
+	fun count(indexes: Set<Pair<Int, Int>>, outOfBoundsPasses: Boolean = false, predicate: (T) -> Boolean): Int {
+		return indexes.asSequence().filter {
+			val outOfBounds = it.first !in 0 until width || it.second !in 0 until height
+			if (outOfBounds && outOfBoundsPasses)
+				return@filter true
+			return@filter predicate(this[it.first, it.second])
+		}.count()
 	}
 
 	fun toMap(): Map<Pair<Int, Int>, T> {
