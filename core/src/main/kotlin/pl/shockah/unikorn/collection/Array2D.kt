@@ -74,8 +74,8 @@ open class Array2D<T> @PublishedApi internal constructor(
 	fun count(indexes: Set<Pair<Int, Int>>, outOfBoundsPasses: Boolean = false, predicate: (T) -> Boolean): Int {
 		return indexes.asSequence().filter {
 			val outOfBounds = it.first !in 0 until width || it.second !in 0 until height
-			if (outOfBounds && outOfBoundsPasses)
-				return@filter true
+			if (outOfBounds)
+				return@filter outOfBounds == outOfBoundsPasses
 			return@filter predicate(this[it.first, it.second])
 		}.count()
 	}
