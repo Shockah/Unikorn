@@ -12,18 +12,10 @@ open class ReadWriteObject<T>(
 	@PublishedApi
 	internal val lock: ReadWriteLock = ReentrantReadWriteLock(fair)
 
-	@PublishedApi
-	internal open val readable: T
-		get() = wrapped
-
-	@PublishedApi
-	internal open val writeable: T
-		get() = wrapped
-
 	inline fun <R> read(closure: (T) -> R): R {
 		try {
 			lock.readLock().lock()
-			return closure(readable)
+			return closure(wrapped)
 		} finally {
 			lock.readLock().unlock()
 		}
@@ -32,7 +24,7 @@ open class ReadWriteObject<T>(
 	inline fun <R> write(closure: (T) -> R): R {
 		try {
 			lock.writeLock().lock()
-			return closure(writeable)
+			return closure(wrapped)
 		} finally {
 			lock.writeLock().unlock()
 		}
@@ -41,7 +33,7 @@ open class ReadWriteObject<T>(
 	inline fun tryRead(time: Time, closure: (T) -> Unit): Boolean {
 		if (lock.readLock().tryLock(time)) {
 			try {
-				closure(readable)
+				closure(wrapped)
 				return true
 			} finally {
 				lock.readLock().unlock()
@@ -54,7 +46,7 @@ open class ReadWriteObject<T>(
 	inline fun tryWrite(time: Time, closure: (T) -> Unit): Boolean {
 		if (lock.readLock().tryLock(time)) {
 			try {
-				closure(writeable)
+				closure(wrapped)
 				return true
 			} finally {
 				lock.readLock().unlock()
@@ -62,5 +54,9 @@ open class ReadWriteObject<T>(
 		} else {
 			return false
 		}
+	}
+
+	fun asReadOnly(): ReadOnlyObject<T> {
+		return ReadOnlyObject(this)
 	}
 }

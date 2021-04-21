@@ -1,9 +1,8 @@
 buildscript {
-	ext.kotlinVersion = '1.4.0'
+	ext.kotlinVersion = '1.4.32'
 
 	repositories {
 		jcenter()
-		maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
 	}
 
 	dependencies {
@@ -16,7 +15,6 @@ subprojects {
 
 	repositories {
 		jcenter()
-		maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
 	}
 
 	compileKotlin {

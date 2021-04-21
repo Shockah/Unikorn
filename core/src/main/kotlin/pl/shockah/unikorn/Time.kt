@@ -73,12 +73,12 @@ data class Time(
 	}
 
 	operator fun plus(time: Time): Time {
-		val minUnit = listOf(this.unit, time.unit).minBy { it.ordinal }!!
+		val minUnit = listOf(this.unit, time.unit).minByOrNull { it.ordinal }!!
 		return minUnit.of(convert(minUnit).duration + time.convert(minUnit).duration)
 	}
 
 	operator fun minus(time: Time): Time {
-		val minUnit = listOf(this.unit, time.unit).minBy { it.ordinal }!!
+		val minUnit = listOf(this.unit, time.unit).minByOrNull { it.ordinal }!!
 		return minUnit.of(convert(minUnit).duration - time.convert(minUnit).duration)
 	}
 
