@@ -33,10 +33,7 @@ class ObservableList<E>(
 	}
 
 	interface ChangeAdapter<E>: ChangeListener<E> {
-		override fun onAddedToList(element: E) {
-		}
-
-		override fun onRemovedFromList(element: E) {
-		}
+		override fun onAddedToList(element: E) { }
+		override fun onRemovedFromList(element: E) { }
 	}
 }

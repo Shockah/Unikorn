@@ -82,8 +82,8 @@ data class LabColor(
 	}
 
 	override val rgb by lazy { xyz.rgb }
-
 	val exactRgb: RGBColor by lazy { xyz.exactRgb }
+	val lch: LCHColor by lazy { LCHColor.from(this) }
 
 	val xyz: XYZColor by lazy {
 		var y = (l + 16) / 116f
@@ -100,8 +100,6 @@ data class LabColor(
 				z * reference.z
 		)
 	}
-
-	val lch: LCHColor by lazy { LCHColor.from(this) }
 
 	override fun getDistance(other: LabColor): Float {
 		return sqrt((l - other.l).pow(2) * 0.01f + (a - other.a).pow(2) * 0.005f + (b - other.b).pow(2) * 0.005f)

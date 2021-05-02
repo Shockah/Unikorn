@@ -30,11 +30,8 @@ class PluginManager(
 	constructor(pluginDirectory: File): this(PluginInfo.Provider.Default(pluginDirectory))
 
 	private val lock = ReentrantLock()
-
 	private val pluginInfos = infoProvider.provide()
-
 	private val plugins = mutableListOf<Plugin>()
-
 	private val loadQueue = LinkedList<PluginInfo>()
 
 	private val pluginConstructorParameterHandlers: List<PluginConstructorParameterHandler> = listOf(
@@ -79,7 +76,7 @@ class PluginManager(
 			loadQueue += infos
 			logger.debug { "Added to load queue: $infos" }
 			loadSweep()
-			return infos.map { it to this[it]!! }.toMap()
+			return infos.associateWith { this[it]!! }
 		}
 	}
 
@@ -151,8 +148,7 @@ class PluginManager(
 						try {
 							callParameters[parameter] = handler.handleConstructorParameter(info, ctor, parameter)
 							break
-						} catch (_: PluginConstructorParameterHandler.UnhandledParameter) {
-						}
+						} catch (_: PluginConstructorParameterHandler.UnhandledParameter) { }
 					}
 				}
 				return ctor.callBy(callParameters)

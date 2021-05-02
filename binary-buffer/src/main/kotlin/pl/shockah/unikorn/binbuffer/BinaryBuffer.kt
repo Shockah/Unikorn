@@ -215,9 +215,7 @@ interface BinaryBuffer {
 
 	interface Memory: Readable, Writable {
 		var readPosition: Int
-
 		var writePosition: Int
-
 		val size: Int
 
 		fun clear()
@@ -250,17 +248,11 @@ class ReadableWritableBinaryBufferDataWrapper internal constructor(
 }
 
 fun BinaryBuffer.Readable.toData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Readable.Data {
-	if (this is BinaryBuffer.Readable.Data)
-		return this
-	else
-		return ReadableWrapper(this, endianness)
+	return this as? BinaryBuffer.Readable.Data ?: ReadableWrapper(this, endianness)
 }
 
 fun BinaryBuffer.Writable.toData(endianness: Endianness = Endianness.LittleEndian): BinaryBuffer.Writable.Data {
-	if (this is BinaryBuffer.Writable.Data)
-		return this
-	else
-		return WritableWrapper(this, endianness)
+	return this as? BinaryBuffer.Writable.Data ?: WritableWrapper(this, endianness)
 }
 
 fun <B> B.toData(endianness: Endianness = Endianness.LittleEndian): ReadableWritableBinaryBufferDataWrapper where B: BinaryBuffer.Readable, B: BinaryBuffer.Writable {

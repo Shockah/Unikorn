@@ -70,8 +70,8 @@ data class LCHColor(
 	}
 
 	override val rgb by lazy { lab.rgb }
-
 	val exactRgb: RGBColor by lazy { lab.exactRgb }
+	val hsluv: HSLuvColor by lazy { HSLuvColor.from(this) }
 
 	val lab: LabColor by lazy { LabColor(
 			l,
@@ -79,8 +79,6 @@ data class LCHColor(
 			h.sin.toFloat() * c,
 			reference
 	) }
-
-	val hsluv: HSLuvColor by lazy { HSLuvColor.from(this) }
 
 	override fun getDistance(other: LCHColor): Float {
 		val delta = h delta other.h

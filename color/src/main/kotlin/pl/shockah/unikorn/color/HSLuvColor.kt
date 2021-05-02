@@ -111,7 +111,6 @@ data class HSLuvColor(
 	}
 
 	override val rgb by lazy { lch.rgb }
-
 	val exactRgb: RGBColor by lazy { lch.exactRgb }
 
 	val lch: LCHColor by lazy {

@@ -6,13 +6,9 @@ interface CircularList<E>: Collection<E>
 
 interface MutableCircularList<E>: CircularList<E>, MutableCollection<E> {
 	fun addNext(element: E)
-
 	fun addPrevious(element: E)
-
 	fun removeNext(): E
-
 	fun removePrevious(): E
-
 	fun rotate(values: Int)
 }
 

@@ -210,16 +210,16 @@ inline fun <T, R> Iterable<T>.mapValid(transform: (T) -> R): List<R> {
 	}.filter { it.second == null }.map { it.first!! }
 }
 
-inline fun <T> MutableCollection<T>.removeFirst(predicate: (T) -> Boolean): MutableCollection<T> {
+inline fun <T> MutableCollection<T>.removeFirst(predicate: (T) -> Boolean): T? {
 	val iterator = iterator()
 	while (iterator.hasNext()) {
 		val next = iterator.next()
 		if (predicate(next)) {
 			iterator.remove()
-			break
+			return next
 		}
 	}
-	return this
+	return null
 }
 
 inline fun <T> Iterable<T>.sumByLong(selector: (T) -> Long): Long {

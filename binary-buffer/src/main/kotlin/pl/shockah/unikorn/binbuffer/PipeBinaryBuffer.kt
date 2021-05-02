@@ -11,13 +11,9 @@ class PipeBinaryBuffer private constructor(
 		underlyingBuffer: BinaryBuffer
 ): BinaryBuffer.Readable, BinaryBuffer.Writable, Closeable {
 	private val readable = underlyingBuffer as BinaryBuffer.Readable
-
 	private val writable = underlyingBuffer as BinaryBuffer.Writable
-
 	private val lock = ReentrantLock()
-
 	private val dataAvailableCondition = lock.newCondition()
-
 	private var closed = false
 
 	override val readAvailable: Int

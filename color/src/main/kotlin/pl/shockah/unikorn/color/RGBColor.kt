@@ -29,9 +29,7 @@ data class RGBColor(
 	}
 
 	override val rgb = this
-
 	val hsl: HSLColor by lazy { HSLColor.from(this) }
-
 	val hsv: HSVColor by lazy { HSVColor.from(this) }
 
 	override fun getDistance(other: RGBColor): Float {

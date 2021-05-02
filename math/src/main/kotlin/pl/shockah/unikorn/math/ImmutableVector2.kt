@@ -7,13 +7,9 @@ class ImmutableVector2(
 		override val y: Double
 ): BaseVector2<ImmutableVector2>() {
 	override val lengthSquared by lazy { super.lengthSquared }
-
 	override val length by lazy { sqrt(lengthSquared) }
-
 	override val degrees by lazy { super.degrees }
-
 	override val radians by lazy { super.radians }
-
 	override val normalized by lazy { super.normalized }
 
 	constructor(): this(0.0, 0.0)

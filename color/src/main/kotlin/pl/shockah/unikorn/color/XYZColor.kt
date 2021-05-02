@@ -109,7 +109,6 @@ data class XYZColor(
 	}
 
 	override val rgb by lazy { internalRGB(CheckingMode.Clamp) }
-
 	val exactRgb: RGBColor by lazy { internalRGB(CheckingMode.Throw) }
 
 	enum class CheckingMode {

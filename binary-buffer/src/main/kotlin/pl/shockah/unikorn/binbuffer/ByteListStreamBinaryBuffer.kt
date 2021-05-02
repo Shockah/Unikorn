@@ -6,11 +6,8 @@ class ByteListStreamBinaryBuffer(
 		private val chunkSize: Int = 8192
 ): BinaryBuffer.Readable, BinaryBuffer.Writable {
 	private val arrays = mutableListOf<ByteArray>()
-
 	private var readOffset = 0
-
 	private var buildingArray: ByteArray? = null
-
 	private var writeOffset = 0
 
 	override val readAvailable: Int

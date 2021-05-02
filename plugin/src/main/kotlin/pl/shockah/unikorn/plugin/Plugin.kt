@@ -4,17 +4,10 @@ open class Plugin(
 		val manager: PluginManager,
 		val info: PluginInfo
 ) {
-	open fun onRequiredDependenciesLoaded() {
-	}
-
-	open fun onUnload() {
-	}
-
-	open fun onDependencyLoaded(plugin: Plugin) {
-	}
-
-	open fun onAllPluginsLoaded() {
-	}
+	open fun onRequiredDependenciesLoaded() { }
+	open fun onUnload() { }
+	open fun onDependencyLoaded(plugin: Plugin) { }
+	open fun onAllPluginsLoaded() { }
 
 	@Retention(AnnotationRetention.RUNTIME)
 	@Target(AnnotationTarget.PROPERTY)

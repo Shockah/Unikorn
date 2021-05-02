@@ -18,20 +18,15 @@ data class HSVColor(
 			val min = minOf(rgb.r, rgb.g, rgb.b)
 			val range = max - min
 
-			val h: Float
-			val s: Float
-			val v: Float
-			h = when {
+			val h: Float = when {
 				range == 0f -> 0f
 				max == rgb.r -> (60 * (rgb.g - rgb.b) / range + 360) % 360
 				max == rgb.g -> 60 * (rgb.b - rgb.r) / range + 120
 				else -> 60 * (rgb.r - rgb.g) / range + 240
 			}
+			val s: Float = if (max > 0) 1 - min / max else 0f
 
-			s = if (max > 0) 1 - min / max else 0f
-			v = max
-
-			return HSVColor(Degrees.of(h.toDouble()), s, v)
+			return HSVColor(Degrees.of(h.toDouble()), s, max)
 		}
 	}
 

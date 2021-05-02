@@ -65,5 +65,5 @@ fun <T: Any> Resolver.resolveIfPresent(type: KClass<T>): T? {
  * @return requested component if available, `null` otherwise
  */
 inline fun <reified T: Any> Resolver.resolveIfPresent(): T? {
-	return resolve(T::class)
+	return resolveIfPresent(T::class)
 }

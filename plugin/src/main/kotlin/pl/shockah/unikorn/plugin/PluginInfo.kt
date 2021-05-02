@@ -19,7 +19,7 @@ data class PluginInfo(
 ) {
 	companion object {
 		operator fun invoke(jarFile: File): PluginInfo {
-			require(!(!jarFile.exists() || !jarFile.isFile)) { "Plugin JAR file ${jarFile.absoluteFile.normalize().absolutePath} doesn't exist." }
+			require(jarFile.exists() && jarFile.isFile) { "Plugin JAR file ${jarFile.absoluteFile.normalize().absolutePath} doesn't exist." }
 
 			ZipFile(jarFile).use { zip ->
 				val jsonEntry = zip.getEntry("plugin.json").guard { throw MissingPluginJsonException() }

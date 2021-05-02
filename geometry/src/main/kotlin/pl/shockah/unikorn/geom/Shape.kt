@@ -9,11 +9,10 @@ import kotlin.reflect.full.superclasses
 
 interface Shape {
 	val boundingBox: Rectangle
+	val perimeter: Double
 
 	val center: Vector2
 		get() = boundingBox.center
-
-	val perimeter: Double
 
 	companion object {
 		val none = object: Filled {
@@ -30,14 +29,9 @@ interface Shape {
 				return this
 			}
 
-			override fun translate(vector: Vector2) {
-			}
-
-			override fun mirror(horizontal: Boolean, vertical: Boolean) {
-			}
-
-			override fun scale(scale: Double) {
-			}
+			override fun translate(vector: Vector2) { }
+			override fun mirror(horizontal: Boolean, vertical: Boolean) { }
+			override fun scale(scale: Double) { }
 
 			override fun contains(point: Vector2): Boolean {
 				return false
@@ -61,14 +55,9 @@ interface Shape {
 				return this
 			}
 
-			override fun translate(vector: Vector2) {
-			}
-
-			override fun mirror(horizontal: Boolean, vertical: Boolean) {
-			}
-
-			override fun scale(scale: Double) {
-			}
+			override fun translate(vector: Vector2) { }
+			override fun mirror(horizontal: Boolean, vertical: Boolean) { }
+			override fun scale(scale: Double) { }
 
 			override fun contains(point: Vector2): Boolean {
 				return true
@@ -123,11 +112,8 @@ interface Shape {
 	}
 
 	fun copy(): Shape
-
 	fun translate(vector: Vector2)
-
 	fun mirror(horizontal: Boolean, vertical: Boolean)
-
 	fun scale(scale: Double)
 
 	infix fun collides(other: Shape): Boolean {

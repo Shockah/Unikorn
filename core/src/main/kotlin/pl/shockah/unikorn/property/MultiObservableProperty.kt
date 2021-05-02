@@ -1,5 +1,6 @@
 package pl.shockah.unikorn.property
 
+import pl.shockah.unikorn.property.MultiObservableProperty.Observer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -7,11 +8,8 @@ class MultiObservableProperty<T>(
 		defaultValue: T
 ): ReadWriteProperty<Any?, T> {
 	private var value: T = defaultValue
-
 	private val observers = mutableListOf<Observer<T>>()
-
 	private val pendingRemovals = mutableListOf<Observer<T>>()
-
 	private var isCallingObservers = false
 
 	override fun getValue(thisRef: Any?, property: KProperty<*>): T {
@@ -33,11 +31,7 @@ class MultiObservableProperty<T>(
 	}
 
 	fun addObserver(closure: (property: KProperty<*>, oldValue: T, newValue: T) -> Unit): Observer<T> {
-		val observer = object: Observer<T> {
-			override fun onValueChanged(property: KProperty<*>, oldValue: T, newValue: T) {
-				closure(property, oldValue, newValue)
-			}
-		}
+		val observer = Observer<T> { property, oldValue, newValue -> closure(property, oldValue, newValue) }
 		addObserver(observer)
 		return observer
 	}
@@ -59,7 +53,7 @@ class MultiObservableProperty<T>(
 		}
 	}
 
-	interface Observer<T> {
+	fun interface Observer<T> {
 		fun onValueChanged(property: KProperty<*>, oldValue: T, newValue: T)
 	}
 }

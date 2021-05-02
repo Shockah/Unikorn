@@ -7,11 +7,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 
 val <T> KProperty0<T>.alias: ReadOnlyProperty<Any?, T>
-	get() = object: ReadOnlyProperty<Any?, T> {
-		override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-			return get()
-		}
-	}
+	get() = ReadOnlyProperty { _, _ -> get() }
 
 val <T> KMutableProperty0<T>.alias: ReadWriteProperty<Any?, T>
 	get() = object: ReadWriteProperty<Any?, T> {

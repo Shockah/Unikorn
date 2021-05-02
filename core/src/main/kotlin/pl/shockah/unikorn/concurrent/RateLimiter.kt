@@ -15,11 +15,8 @@ class RateLimiter(
 		paused: Boolean = false
 ) {
 	private var permits: Int = initialPermits
-
 	private val timePerPermit = time.convert(TimeUnit.NANOSECONDS) / maxPermits
-
 	private var lastUpdateTime = System.nanoTime()
-
 	private var pauseDeltaTime: Long? = if (paused) 0L else null
 
 	val isPaused: Boolean
@@ -28,9 +25,7 @@ class RateLimiter(
 		}
 
 	private val lock = ReentrantLock()
-
 	private val condition = lock.newCondition()
-
 	private val executor = Executors.newSingleThreadScheduledExecutor()
 
 	private fun update() {

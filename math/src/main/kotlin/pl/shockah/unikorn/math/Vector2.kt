@@ -59,22 +59,15 @@ abstract class BaseVector2<T: BaseVector2<T>>: Comparable<BaseVector2<*>>, Easab
 	}
 
 	abstract operator fun unaryMinus(): T
-
 	abstract operator fun plus(vector: Vector2): T
-
 	abstract operator fun minus(vector: Vector2): T
-
 	abstract operator fun times(vector: Vector2): T
-
 	abstract operator fun div(vector: Vector2): T
-
 	abstract operator fun plus(scalar: Double): T
-
 	abstract operator fun minus(scalar: Double): T
-
 	abstract operator fun times(scalar: Double): T
-
 	abstract operator fun div(scalar: Double): T
+	abstract infix fun rotated(angle: Angle): T
 
 	infix fun degrees(vector: Vector2): Degrees {
 		return (this radians vector).degrees
@@ -91,8 +84,6 @@ abstract class BaseVector2<T: BaseVector2<T>>: Comparable<BaseVector2<*>>, Easab
 	infix fun cross(vector: Vector2): Double {
 		return x * vector.y - y * vector.x
 	}
-
-	abstract infix fun rotated(angle: Angle): T
 
 	infix fun equals(other: Vector2): Boolean {
 		return other.x == x && other.y == y
