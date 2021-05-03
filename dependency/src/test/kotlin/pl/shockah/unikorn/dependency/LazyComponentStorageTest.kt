@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 
 class LazyComponentStorageTest {
 	private class BlankResolver: Resolver {
-		override fun <T: Any, Key> resolve(id: ComponentId<T, Key>): T {
+		override fun <T: Any, Key> resolve(id: ComponentId<T, Key>, subtypes: Resolver.Subtypes): T {
 			throw MissingComponentException()
 		}
 	}

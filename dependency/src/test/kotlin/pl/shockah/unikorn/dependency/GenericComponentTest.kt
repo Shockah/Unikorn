@@ -7,7 +7,6 @@ class GenericComponentTest {
 	private val storageFactory = LazyComponentStorageFactory()
 
 	@Test
-	@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 	fun testDifferentGenerics() {
 		val container = Container(defaultComponentStorageFactory = storageFactory)
 
