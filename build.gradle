@@ -22,7 +22,8 @@ subprojects {
 			javaParameters = true
 			freeCompilerArgs = [
 					'-Xuse-experimental=kotlin.ExperimentalUnsignedTypes',
-					'-XXLanguage:+InlineClasses'
+					'-XXLanguage:+InlineClasses',
+					'-Xopt-in=kotlin.ExperimentalStdlibApi'
 			]
 		}
 	}

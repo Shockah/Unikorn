@@ -3,18 +3,19 @@ package pl.shockah.unikorn.dependency
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class ContainerTest {
+class GenericComponentTest {
 	private val storageFactory = LazyComponentStorageFactory()
 
 	@Test
 	@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-	fun testRegisterAndUnregister() {
+	fun testDifferentGenerics() {
 		val container = Container(defaultComponentStorageFactory = storageFactory)
 
-		container.register(Object())
-		Assertions.assertDoesNotThrow { container.resolve<Object>() }
+		container.register<List<String>>(mutableListOf())
+		container.register<List<Int>>(mutableListOf())
 
-		container.unregister<Object>()
-		Assertions.assertThrows(MissingComponentException::class.java) { container.resolve<Object>() }
+		val stringList = container.resolve<List<String>>()
+		val intList = container.resolve<List<Int>>()
+		Assertions.assertNotSame(stringList, intList)
 	}
 }

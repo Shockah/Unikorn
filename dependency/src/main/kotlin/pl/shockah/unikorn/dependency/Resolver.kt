@@ -1,16 +1,19 @@
 package pl.shockah.unikorn.dependency
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 class MissingComponentException: Exception()
 
 data class ComponentId<T: Any, Key>(
-		val type: KClass<T>,
+		val type: KType,
+		val klass: KClass<T>,
 		val key: Key
 ) {
 	companion object {
-		operator fun <T: Any> invoke(type: KClass<T>): ComponentId<T, Unit> {
-			return ComponentId(type, Unit)
+		operator fun <T: Any> invoke(type: KType, klass: KClass<T>): ComponentId<T, Unit> {
+			return ComponentId(type, klass, Unit)
 		}
 	}
 }
@@ -27,8 +30,8 @@ interface Resolver {
  * @return requested component if available
  * @throws MissingComponentException if a component is not available
  */
-fun <T: Any> Resolver.resolve(type: KClass<T>): T {
-	return resolve(ComponentId(type))
+fun <T: Any> Resolver.resolve(type: KType, klass: KClass<T>): T {
+	return resolve(ComponentId(type, klass))
 }
 
 /**
@@ -36,7 +39,7 @@ fun <T: Any> Resolver.resolve(type: KClass<T>): T {
  * @throws MissingComponentException if a component is not available
  */
 inline fun <reified T: Any> Resolver.resolve(): T {
-	return resolve(T::class)
+	return resolve(typeOf<T>(), T::class)
 }
 
 /**
@@ -53,9 +56,9 @@ fun <T: Any, Key> Resolver.resolveIfPresent(id: ComponentId<T, Key>): T? {
 /**
  * @return requested component if available, `null` otherwise
  */
-fun <T: Any> Resolver.resolveIfPresent(type: KClass<T>): T? {
+fun <T: Any> Resolver.resolveIfPresent(type: KType, klass: KClass<T>): T? {
 	try {
-		return resolve(type)
+		return resolve(type, klass)
 	} catch (exception: MissingComponentException) {
 		return null
 	}
@@ -65,5 +68,5 @@ fun <T: Any> Resolver.resolveIfPresent(type: KClass<T>): T? {
  * @return requested component if available, `null` otherwise
  */
 inline fun <reified T: Any> Resolver.resolveIfPresent(): T? {
-	return resolveIfPresent(T::class)
+	return resolveIfPresent(typeOf<T>(), T::class)
 }

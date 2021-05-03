@@ -3,6 +3,7 @@ package pl.shockah.unikorn.dependency
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
+@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 class ParentContainerTest {
 	private val storageFactory = LazyComponentStorageFactory()
 
@@ -13,8 +14,8 @@ class ParentContainerTest {
 
 		parentContainer.register(Object())
 
-		val parentInstance = parentContainer.resolve(Object::class)
-		val childInstance = childContainer.resolve(Object::class)
+		val parentInstance = parentContainer.resolve<Object>()
+		val childInstance = childContainer.resolve<Object>()
 
 		Assertions.assertEquals(parentInstance, childInstance)
 	}
@@ -26,8 +27,8 @@ class ParentContainerTest {
 
 		childContainer.register(Object())
 
-		Assertions.assertDoesNotThrow { childContainer.resolve(Object::class) }
-		Assertions.assertThrows(MissingComponentException::class.java) { parentContainer.resolve(Object::class) }
+		Assertions.assertDoesNotThrow { childContainer.resolve<Object>() }
+		Assertions.assertThrows(MissingComponentException::class.java) { parentContainer.resolve<Object>() }
 	}
 
 	@Test
@@ -38,8 +39,8 @@ class ParentContainerTest {
 		parentContainer.register(Object())
 		childContainer.register(Object())
 
-		val parentInstance = parentContainer.resolve(Object::class)
-		val childInstance = childContainer.resolve(Object::class)
+		val parentInstance = parentContainer.resolve<Object>()
+		val childInstance = childContainer.resolve<Object>()
 
 		Assertions.assertNotEquals(parentInstance, childInstance)
 	}
