@@ -39,20 +39,21 @@ interface Resolver {
 	fun <T: Any, Key> resolve(id: ComponentId<T, Key>, subtypes: Subtypes = Subtypes.Allow()): T
 }
 
-inline operator fun <reified T> Resolver.getValue(thisRef: Any?, property: KProperty<*>): T {
-	return resolve()
+inline fun <reified T: Any> Resolver.inject(subtypes: Resolver.Subtypes = Resolver.Subtypes.Allow(), mode: LazyThreadSafetyMode = LazyThreadSafetyMode.SYNCHRONIZED): ResolverDelegate<T> {
+	return ResolverDelegate(this, typeOf<T>(), T::class, subtypes, mode)
 }
 
-fun Resolver.delegate(subtypes: Resolver.Subtypes = Resolver.Subtypes.Allow()): ResolverDelegate {
-	return ResolverDelegate(this, subtypes)
-}
-
-class ResolverDelegate(
-		@PublishedApi internal val resolver: Resolver,
-		@PublishedApi internal val subtypes: Resolver.Subtypes
+class ResolverDelegate<T: Any>(
+		resolver: Resolver,
+		type: KType,
+		klass: KClass<T>,
+		subtypes: Resolver.Subtypes,
+		mode: LazyThreadSafetyMode = LazyThreadSafetyMode.SYNCHRONIZED
 ) {
-	inline operator fun <reified T> getValue(thisRef: Any?, property: KProperty<*>): T {
-		return resolver.resolve(subtypes)
+	private val component by lazy(mode) { resolver.resolve(type, klass, subtypes) }
+
+	operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+		return component
 	}
 }
 
