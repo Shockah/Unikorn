@@ -1,6 +1,6 @@
 dependencies {
 	implementation project(':core')
-	implementation 'com.beust:klaxon:5.0.5'
+	implementation 'com.beust:klaxon:5.5'
 	implementation 'io.github.microutils:kotlin-logging:1.6.26'
 }
 
