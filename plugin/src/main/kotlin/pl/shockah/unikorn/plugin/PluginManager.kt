@@ -219,22 +219,18 @@ class PluginManager(
 	}
 
 	private inner class PluginManagerPluginConstructorParameterHandler: PluginConstructorParameterHandler {
-		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any? {
-			if (parameter.type.classifier == PluginManager::class) {
+		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any {
+			if (parameter.type.classifier == PluginManager::class)
 				return this@PluginManager
-			} else {
-				return super.handleConstructorParameter(pluginInfo, constructor, parameter)
-			}
+			throw PluginConstructorParameterHandler.UnhandledParameter()
 		}
 	}
 
 	private class PluginInfoPluginConstructorParameterHandler: PluginConstructorParameterHandler {
-		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any? {
-			if (parameter.type.classifier == PluginInfo::class) {
+		override fun handleConstructorParameter(pluginInfo: PluginInfo, constructor: KFunction<Plugin>, parameter: KParameter): Any {
+			if (parameter.type.classifier == PluginInfo::class)
 				return pluginInfo
-			} else {
-				return super.handleConstructorParameter(pluginInfo, constructor, parameter)
-			}
+			throw PluginConstructorParameterHandler.UnhandledParameter()
 		}
 	}
 
@@ -249,7 +245,7 @@ class PluginManager(
 				if (parameter.type.isMarkedNullable && classifier.isSubclassOf(Plugin::class))
 					return null
 			}
-			return super.handleConstructorParameter(pluginInfo, constructor, parameter)
+			throw PluginConstructorParameterHandler.UnhandledParameter()
 		}
 	}
 }

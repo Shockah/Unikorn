@@ -48,6 +48,7 @@ inline fun <reified T: Any> Container.register(component: T, componentStorageFac
 fun <T: Any> Container.unregister(type: KType, klass: KClass<T>) {
 	unregister(ComponentId(type, klass))
 }
+
 inline fun <reified T: Any> Container.unregister() {
 	unregister(typeOf<T>(), T::class)
 }
