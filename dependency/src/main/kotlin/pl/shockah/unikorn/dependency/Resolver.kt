@@ -1,6 +1,7 @@
 package pl.shockah.unikorn.dependency
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -36,6 +37,23 @@ interface Resolver {
 	 * @throws MissingComponentException if a component is not available
 	 */
 	fun <T: Any, Key> resolve(id: ComponentId<T, Key>, subtypes: Subtypes = Subtypes.Allow()): T
+}
+
+inline operator fun <reified T> Resolver.getValue(thisRef: Any?, property: KProperty<*>): T {
+	return resolve()
+}
+
+fun Resolver.delegate(subtypes: Resolver.Subtypes = Resolver.Subtypes.Allow()): ResolverDelegate {
+	return ResolverDelegate(this, subtypes)
+}
+
+class ResolverDelegate(
+		@PublishedApi internal val resolver: Resolver,
+		@PublishedApi internal val subtypes: Resolver.Subtypes
+) {
+	inline operator fun <reified T> getValue(thisRef: Any?, property: KProperty<*>): T {
+		return resolver.resolve(subtypes)
+	}
 }
 
 /**
