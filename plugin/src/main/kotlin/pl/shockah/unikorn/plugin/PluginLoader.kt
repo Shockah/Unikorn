@@ -4,18 +4,18 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
-interface PluginLoaderFactory<Reference> {
-	fun createPluginLoader(references: Set<Reference>): PluginLoader<Reference>
+interface PluginLoaderFactory<PluginInfoType: PluginInfo> {
+	fun createPluginLoader(pluginInfos: Set<PluginInfoType>): PluginLoader<PluginInfoType>
 }
 
-interface PluginLoader<Reference> {
-	fun loadPlugin(info: PluginInfo.WithReference<Reference>, parameterHandlers: List<PluginConstructorParameterHandler>): Plugin
+interface PluginLoader<PluginInfoType: PluginInfo> {
+	fun loadPlugin(info: PluginInfoType, parameterHandlers: List<PluginConstructorParameterHandler>): Plugin
 }
 
-abstract class ClassPluginLoader<Reference>: PluginLoader<Reference> {
-	abstract fun loadPluginClass(info: PluginInfo.WithReference<Reference>): KClass<out Plugin>
+abstract class ClassPluginLoader<PluginInfoType: PluginInfo>: PluginLoader<PluginInfoType> {
+	abstract fun loadPluginClass(info: PluginInfoType): KClass<out Plugin>
 
-	override fun loadPlugin(info: PluginInfo.WithReference<Reference>, parameterHandlers: List<PluginConstructorParameterHandler>): Plugin {
+	override fun loadPlugin(info: PluginInfoType, parameterHandlers: List<PluginConstructorParameterHandler>): Plugin {
 		val pluginKlazz = loadPluginClass(info)
 		val satisfiedConstructors = getSatisfiedConstructors(pluginKlazz, parameterHandlers)
 		val satisfiedConstructor = satisfiedConstructors.firstOrNull() ?: throw NoSuchMethodException("Missing satisfied plugin constructor for ${info.identifier}.")

@@ -1,21 +1,23 @@
 package pl.shockah.unikorn.plugin.impl
 
-import pl.shockah.unikorn.plugin.*
-import java.io.File
+import pl.shockah.unikorn.plugin.ClassPluginLoader
+import pl.shockah.unikorn.plugin.Plugin
+import pl.shockah.unikorn.plugin.PluginLoader
+import pl.shockah.unikorn.plugin.PluginLoaderFactory
 import java.net.URLClassLoader
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-class FilePluginLoaderFactory: PluginLoaderFactory<File> {
-	override fun createPluginLoader(references: Set<File>): PluginLoader<File> {
-		return FilePluginLoader(URLClassLoader(references.map { it.toURI().toURL() }.toTypedArray()))
+class FilePluginLoaderFactory: PluginLoaderFactory<FilePluginInfo> {
+	override fun createPluginLoader(pluginInfos: Set<FilePluginInfo>): PluginLoader<FilePluginInfo> {
+		return FilePluginLoader(URLClassLoader(pluginInfos.map { it.jarFile.toURI().toURL() }.toTypedArray()))
 	}
 }
 
 class FilePluginLoader internal constructor (
 		private val classLoader: ClassLoader
-): ClassPluginLoader<File>() {
-	override fun loadPluginClass(info: PluginInfo.WithReference<File>): KClass<out Plugin> {
+): ClassPluginLoader<FilePluginInfo>() {
+	override fun loadPluginClass(info: FilePluginInfo): KClass<out Plugin> {
 		val klazz = classLoader.loadClass(info.pluginClassName).kotlin
 		if (!klazz.isSubclassOf(Plugin::class))
 			throw IllegalArgumentException("${info.pluginClassName} is not a Plugin.")

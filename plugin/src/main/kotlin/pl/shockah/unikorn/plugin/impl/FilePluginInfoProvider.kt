@@ -10,8 +10,8 @@ import pl.shockah.unikorn.plugin.PluginVersion
 import java.io.File
 import java.util.zip.ZipFile
 
-abstract class BaseFilePluginInfoProvider: PluginInfoProvider<File> {
-	protected fun readPluginInfo(jarFile: File): PluginInfo.WithReference<File> {
+abstract class BaseFilePluginInfoProvider: PluginInfoProvider<FilePluginInfo> {
+	protected fun readPluginInfo(jarFile: File): FilePluginInfo {
 		require(jarFile.exists() && jarFile.isFile) { "Plugin JAR file ${jarFile.absoluteFile.normalize().absolutePath} doesn't exist." }
 
 		ZipFile(jarFile).use { zip ->
@@ -21,10 +21,9 @@ abstract class BaseFilePluginInfoProvider: PluginInfoProvider<File> {
 		}
 	}
 
-	protected fun readPluginInfo(json: JsonObject, reference: File): PluginInfo.WithReference<File> {
-		return PluginInfo.WithReference(
+	protected fun readPluginInfo(json: JsonObject, jarFile: File): FilePluginInfo {
+		return FilePluginInfo(
 				json.string("identifier")!!,
-				json.string("pluginClassName")!!,
 				PluginVersion(json.string("version") ?: "1.0"),
 				json.array<JsonObject>("dependencies")?.map {
 					PluginInfo.DependencyEntry(
@@ -32,7 +31,8 @@ abstract class BaseFilePluginInfoProvider: PluginInfoProvider<File> {
 							PluginVersion.Filter(it.string("version") ?: "*")
 					)
 				}?.toSet() ?: emptySet(),
-				reference
+				jarFile,
+				json.string("pluginClassName")!!
 		)
 	}
 }
@@ -42,7 +42,7 @@ class FileListPluginInfoProvider(
 ): BaseFilePluginInfoProvider() {
 	class MissingPluginJsonException: Exception()
 
-	override fun getPluginInfos(): Set<PluginInfo.WithReference<File>> {
+	override fun getPluginInfos(): Set<FilePluginInfo> {
 		return files.mapValid { readPluginInfo(it.absoluteFile.normalize()) }.toSet()
 	}
 }
@@ -52,7 +52,7 @@ class FilePluginInfoProvider(
 ): BaseFilePluginInfoProvider() {
 	class MissingPluginJsonException: Exception()
 
-	override fun getPluginInfos(): Set<PluginInfo.WithReference<File>> {
+	override fun getPluginInfos(): Set<FilePluginInfo> {
 		return (pluginDirectory.listFiles() ?: emptyArray()).filter { it.extension == "jar" }.mapValid { readPluginInfo(it.absoluteFile.normalize()) }.toSet()
 	}
 }

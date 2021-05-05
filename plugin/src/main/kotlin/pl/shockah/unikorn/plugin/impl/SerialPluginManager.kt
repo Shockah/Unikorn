@@ -5,15 +5,15 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.reflect.KClass
 
-class SerialPluginManager<Reference>(
-		private val infoProvider: PluginInfoProvider<Reference>,
+class SerialPluginManager<PluginInfoType: PluginInfo>(
+		private val infoProvider: PluginInfoProvider<PluginInfoType>,
 		private val dependencyResolver: PluginDependencyResolver = PluginDependencyResolverImpl(),
-		private val loaderFactory: PluginLoaderFactory<Reference>,
+		private val loaderFactory: PluginLoaderFactory<PluginInfoType>,
 		private val dependencyInjector: PluginDependencyInjector? = AnnotationPluginDependencyInjector(),
 		parameterHandlers: List<PluginConstructorParameterHandler> = emptyList()
 ): ReloadablePluginManager {
-	private class PluginEntry<Reference>(
-			val info: PluginInfo.WithReference<Reference>,
+	private class PluginEntry<PluginInfoType: PluginInfo>(
+			val info: PluginInfoType,
 			val plugin: Plugin,
 			var requiredDependencies: Set<Plugin> = emptySet(),
 			var optionalDependencies: Set<Plugin> = emptySet()
@@ -21,8 +21,8 @@ class SerialPluginManager<Reference>(
 
 	private val lock = ReentrantLock()
 	private val allParameterHandlers by lazy { listOf(InstancePluginConstructorParameterHandler(this)) + parameterHandlers }
-	private var providedInfos: Set<PluginInfo.WithReference<Reference>>? = null
-	private var pluginEntries = mutableListOf<PluginEntry<Reference>>()
+	private var providedInfos: Set<PluginInfoType>? = null
+	private var pluginEntries = mutableListOf<PluginEntry<PluginInfoType>>()
 
 	override val allPluginInfos: Set<PluginInfo>
 		get() = lock.withLock {
@@ -56,14 +56,14 @@ class SerialPluginManager<Reference>(
 				throw PluginLoadException.AlreadyLoaded(alreadyLoadedInfos)
 
 			@Suppress("UNCHECKED_CAST")
-			val typedInfos = infos.map { it as PluginInfo.WithReference<Reference> }
+			val typedInfos = infos.map { it as PluginInfoType }
 
 			val resolveResult = dependencyResolver.resolvePluginDependencies(typedInfos, pluginEntries.map { it.info })
 			if (resolveResult.unresolvableDueToMissingDependencies.isNotEmpty() || resolveResult.unresolvableChains.isNotEmpty())
 				throw PluginLoadException.Unresolvable(resolveResult.unresolvableDueToMissingDependencies, resolveResult.unresolvableChains)
 
-			val pluginLoader = loaderFactory.createPluginLoader((pluginEntries.map { it.info } + resolveResult.loadOrder.flatten()).map { it.reference }.toSet())
-			val newlyLoadedPluginEntries = mutableSetOf<PluginEntry<Reference>>()
+			val pluginLoader = loaderFactory.createPluginLoader((pluginEntries.map { it.info } + resolveResult.loadOrder.flatten()).toSet())
+			val newlyLoadedPluginEntries = mutableSetOf<PluginEntry<PluginInfoType>>()
 			for (loadStep in resolveResult.loadOrder) {
 				for (infoToLoad in loadStep) {
 					val infoParameterHandler = InstancePluginConstructorParameterHandler(infoToLoad)
@@ -157,7 +157,7 @@ class SerialPluginManager<Reference>(
 		}
 	}
 
-	private fun unloadPluginEntry(pluginEntry: PluginEntry<Reference>) {
+	private fun unloadPluginEntry(pluginEntry: PluginEntry<PluginInfoType>) {
 		lock.withLock {
 			pluginEntry.optionalDependencies.forEach { it.willUnloadDependency(pluginEntry.plugin) }
 			pluginEntry.plugin.onUnload()

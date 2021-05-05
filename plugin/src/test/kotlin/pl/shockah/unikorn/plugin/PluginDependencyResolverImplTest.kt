@@ -6,14 +6,20 @@ import org.junit.jupiter.api.Test
 import pl.shockah.unikorn.plugin.impl.PluginDependencyResolverImpl
 
 class PluginDependencyResolverImplTest {
+	private data class MockPluginInfo(
+			override val identifier: String,
+			override val version: PluginVersion = PluginVersion("1.0"),
+			override val dependencies: Set<PluginInfo.DependencyEntry> = emptySet()
+	): PluginInfo
+
 	private val resolver = PluginDependencyResolverImpl()
 
 	@Test
 	fun testNoDependenciesResolve() {
 		val infosToLoad = setOf(
-				PluginInfo.WithReference("a", "a", reference = Unit),
-				PluginInfo.WithReference("b", "b", reference = Unit),
-				PluginInfo.WithReference("c", "c", reference = Unit)
+				MockPluginInfo("a"),
+				MockPluginInfo("b"),
+				MockPluginInfo("c")
 		)
 
 		val result = resolver.resolvePluginDependencies(infosToLoad, emptySet())
@@ -27,16 +33,16 @@ class PluginDependencyResolverImplTest {
 	@Test
 	fun testDependenciesResolve() {
 		val firstPhaseInfos = setOf(
-				PluginInfo.WithReference("a1", "a1", reference = Unit),
-				PluginInfo.WithReference("a2", "a2", reference = Unit)
+				MockPluginInfo("a1"),
+				MockPluginInfo("a2")
 		)
 		val secondPhaseInfos = setOf(
-				PluginInfo.WithReference("b1", "b1", dependencies = setOf(PluginInfo.DependencyEntry("a1")), reference = Unit),
-				PluginInfo.WithReference("b2", "b2", dependencies = setOf(PluginInfo.DependencyEntry("a1"), PluginInfo.DependencyEntry("a2")), reference = Unit)
+				MockPluginInfo("b1", dependencies = setOf(PluginInfo.DependencyEntry("a1"))),
+				MockPluginInfo("b2", dependencies = setOf(PluginInfo.DependencyEntry("a1"), PluginInfo.DependencyEntry("a2")))
 		)
 		val thirdPhaseInfos = setOf(
-				PluginInfo.WithReference("c1", "c1", dependencies = setOf(PluginInfo.DependencyEntry("b1")), reference = Unit),
-				PluginInfo.WithReference("c2", "c2", dependencies = setOf(PluginInfo.DependencyEntry("a2"), PluginInfo.DependencyEntry("b2")), reference = Unit)
+				MockPluginInfo("c1", dependencies = setOf(PluginInfo.DependencyEntry("b1"))),
+				MockPluginInfo("c2", dependencies = setOf(PluginInfo.DependencyEntry("a2"), PluginInfo.DependencyEntry("b2")))
 		)
 
 		val result = resolver.resolvePluginDependencies(firstPhaseInfos + secondPhaseInfos + thirdPhaseInfos, emptySet())
@@ -51,8 +57,8 @@ class PluginDependencyResolverImplTest {
 
 	@Test
 	fun testMissingDependenciesResolve() {
-		val info1 = PluginInfo.WithReference("a", "a", reference = Unit)
-		val info2 = PluginInfo.WithReference("b", "b", dependencies = setOf(PluginInfo.DependencyEntry("c")), reference = Unit)
+		val info1 = MockPluginInfo("a")
+		val info2 = MockPluginInfo("b", dependencies = setOf(PluginInfo.DependencyEntry("c")))
 
 		val result = resolver.resolvePluginDependencies(setOf(info1, info2), emptySet())
 
@@ -64,7 +70,7 @@ class PluginDependencyResolverImplTest {
 
 	@Test
 	fun testSelfChainingDependencyResolve() {
-		val info = PluginInfo.WithReference("a", "a", dependencies = setOf(PluginInfo.DependencyEntry("a")), reference = Unit)
+		val info = MockPluginInfo("a", dependencies = setOf(PluginInfo.DependencyEntry("a")))
 
 		val result = resolver.resolvePluginDependencies(setOf(info), emptySet())
 
@@ -79,8 +85,8 @@ class PluginDependencyResolverImplTest {
 
 	@Test
 	fun testChainingDependencyResolve() {
-		val info1 = PluginInfo.WithReference("a", "a", dependencies = setOf(PluginInfo.DependencyEntry("b")), reference = Unit)
-		val info2 = PluginInfo.WithReference("b", "b", dependencies = setOf(PluginInfo.DependencyEntry("a")), reference = Unit)
+		val info1 = MockPluginInfo("a", dependencies = setOf(PluginInfo.DependencyEntry("b")))
+		val info2 = MockPluginInfo("b", dependencies = setOf(PluginInfo.DependencyEntry("a")))
 
 		val result = resolver.resolvePluginDependencies(setOf(info1, info2), emptySet())
 
