@@ -1,13 +1,8 @@
 package pl.shockah.unikorn.plugin.strong1
 
 import pl.shockah.unikorn.plugin.Plugin
-import pl.shockah.unikorn.plugin.PluginInfo
-import pl.shockah.unikorn.plugin.PluginManager
 
-class Strong1Plugin(
-		manager: PluginManager,
-		info: PluginInfo
-): Plugin(manager, info) {
+class Strong1Plugin: Plugin {
 	init {
 		println("Loading ${this::class.simpleName}")
 	}
