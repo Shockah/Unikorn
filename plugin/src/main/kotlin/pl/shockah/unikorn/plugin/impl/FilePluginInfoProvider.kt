@@ -31,7 +31,7 @@ abstract class BaseFilePluginInfoProvider: PluginInfoProvider<File> {
 							it.string("identifier")!!,
 							PluginVersion.Filter(it.string("version") ?: "*")
 					)
-				} ?: emptyList(),
+				}?.toSet() ?: emptySet(),
 				reference
 		)
 	}

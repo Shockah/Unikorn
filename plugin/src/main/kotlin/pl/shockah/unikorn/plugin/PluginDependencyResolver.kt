@@ -11,13 +11,10 @@ data class PluginDependencyResolveResult<PluginInfoType: PluginInfo>(
 	)
 
 	data class UnresolvableChain<PluginInfoType: PluginInfo>(
-			val info: PluginInfoType,
-			val chain: List<PluginInfo.DependencyEntry>
+			val chain: List<Pair<PluginInfoType, PluginInfo.DependencyEntry>>
 	) {
 		override fun equals(other: Any?): Boolean {
 			if (other !is UnresolvableChain<*>)
-				return false
-			if (other.info != info)
 				return false
 			if (other.chain.size != chain.size)
 				return false
@@ -33,9 +30,7 @@ data class PluginDependencyResolveResult<PluginInfoType: PluginInfo>(
 		}
 
 		override fun hashCode(): Int {
-			var result = info.hashCode()
-			result = 31 * result + chain.toSet().hashCode()
-			return result
+			return chain.toSet().hashCode()
 		}
 	}
 }

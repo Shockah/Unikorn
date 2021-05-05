@@ -57,15 +57,17 @@ class PluginDependencyResolverImpl: PluginDependencyResolver {
 			while (infosToLoadLeft.isNotEmpty()) {
 				val preCycleCount = infosToLoadLeft.size
 
-				val iterator = infosToLoadLeft.iterator()
-				while (iterator.hasNext()) {
-					val infoToLoad = iterator.next()
+				val toRemove = mutableSetOf<PluginInfoType>()
+				for (infoToLoad in infosToLoad) {
+					if (toRemove.contains(infoToLoad))
+						continue
 					val chain = findDependencyChain(infoToLoad, infosToLoadLeft.toSet())
 					if (chain != null) {
-						unresolvableChains.add(PluginDependencyResolveResult.UnresolvableChain(infoToLoad, chain))
-						iterator.remove()
+						unresolvableChains.add(PluginDependencyResolveResult.UnresolvableChain(chain))
+						toRemove.addAll(chain.map { it.first })
 					}
 				}
+				infosToLoadLeft.removeAll(toRemove)
 
 				if (preCycleCount == infosToLoadLeft.size)
 					break
@@ -73,15 +75,8 @@ class PluginDependencyResolverImpl: PluginDependencyResolver {
 		}
 
 		fun processUnresolvable() {
-			while (infosToLoadLeft.isNotEmpty()) {
-				val preCycleCount = infosToLoadLeft.size
-
-				processUnresolvableDueToMissingDependencies()
-				processUnresolvableChains()
-
-				if (preCycleCount == infosToLoadLeft.size)
-					break
-			}
+			processUnresolvableDueToMissingDependencies()
+			processUnresolvableChains()
 		}
 
 		processUnresolvable()
@@ -90,12 +85,12 @@ class PluginDependencyResolverImpl: PluginDependencyResolver {
 		return PluginDependencyResolveResult(loadOrder, unresolvableDueToMissingDependencies, unresolvableChains)
 	}
 
-	private fun findDependencyChain(infoToLoad: PluginInfo, knownInfos: Set<PluginInfo>, currentInfo: PluginInfo = infoToLoad, currentChain: List<PluginInfo.DependencyEntry> = emptyList()): List<PluginInfo.DependencyEntry>? {
+	private fun <PluginInfoType: PluginInfo> findDependencyChain(infoToLoad: PluginInfoType, knownInfos: Set<PluginInfoType>, currentInfo: PluginInfoType = infoToLoad, currentChain: List<Pair<PluginInfoType, PluginInfo.DependencyEntry>> = emptyList()): List<Pair<PluginInfoType, PluginInfo.DependencyEntry>>? {
 		if (currentInfo == infoToLoad && currentChain.isNotEmpty())
 			return currentChain
 		for (dependency in currentInfo.dependencies) {
 			val newInfo = knownInfos.firstOrNull { dependency.matches(it) } ?: continue
-			val newChain = currentChain + dependency
+			val newChain = currentChain + (newInfo to dependency)
 			return findDependencyChain(infoToLoad, knownInfos, newInfo, newChain) ?: continue
 		}
 		return null

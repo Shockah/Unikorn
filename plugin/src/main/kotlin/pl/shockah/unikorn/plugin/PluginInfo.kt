@@ -4,7 +4,7 @@ interface PluginInfo {
 	val identifier: String
 	val pluginClassName: String
 	val version: PluginVersion
-	val dependencies: List<DependencyEntry>
+	val dependencies: Set<DependencyEntry>
 
 	data class DependencyEntry(
 			val identifier: String,
@@ -19,7 +19,7 @@ interface PluginInfo {
 			override val identifier: String,
 			override val pluginClassName: String,
 			override val version: PluginVersion = PluginVersion("1.0"),
-			override val dependencies: List<DependencyEntry> = emptyList(),
+			override val dependencies: Set<DependencyEntry> = emptySet(),
 			val reference: Reference
 	): PluginInfo
 }
