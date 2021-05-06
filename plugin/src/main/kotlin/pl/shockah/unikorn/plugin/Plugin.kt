@@ -7,4 +7,5 @@ interface Plugin {
 	fun onDependencyInjectionFinished() { }
 	fun willUnloadDependency(plugin: Plugin) { }
 	fun onPluginLoadCycleFinished(allLoadedPlugins: Map<PluginInfo, Plugin>, newlyLoadedPlugins: Map<PluginInfo, Plugin>) { }
+	fun onPluginUnloadCycleFinished(allLoadedPlugins: Map<PluginInfo, Plugin>, unloadedPlugins: Set<PluginInfo>) { }
 }

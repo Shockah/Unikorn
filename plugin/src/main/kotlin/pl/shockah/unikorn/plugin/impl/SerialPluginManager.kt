@@ -100,7 +100,7 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 				newlyLoadedPluginEntries.forEach { it.plugin.onDependencyInjectionFinished() }
 			}
 			val immutableNewlyLoadedPlugins: Map<PluginInfo, Plugin> = newlyLoadedPluginEntries.associate { it.info to it.plugin }
-			newlyLoadedPluginEntries.map { it.plugin.onPluginLoadCycleFinished(allLoadedPlugins, immutableNewlyLoadedPlugins) }
+			allLoadedPlugins.values.forEach { it.onPluginLoadCycleFinished(allLoadedPlugins, immutableNewlyLoadedPlugins) }
 		}
 	}
 
@@ -127,6 +127,9 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 			}
 
 			pluginEntriesToUnload.forEach { unloadPluginEntry(it) }
+			val allLoadedPlugins: Map<PluginInfo, Plugin> = loadedPlugins
+			val unloadedPluginInfos: Set<PluginInfo> = pluginEntriesToUnload.map { it.info }.toSet()
+			allLoadedPlugins.values.forEach { it.onPluginUnloadCycleFinished(allLoadedPlugins, unloadedPluginInfos) }
 		}
 	}
 
@@ -148,6 +151,7 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 	override fun unloadAllPlugins() {
 		lock.withLock {
 			pluginEntries.reversed().toList().forEach { unloadPluginEntry(it) }
+			// no need to call onPluginUnloadCycleFinished - there are no plugins left to call on
 		}
 	}
 
