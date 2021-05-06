@@ -5,7 +5,7 @@ import pl.shockah.unikorn.plugin.PluginLoaderFactory
 import java.net.URLClassLoader
 
 class FilePluginLoaderFactory: PluginLoaderFactory<FilePluginInfo> {
-	override fun createPluginLoader(pluginInfos: Set<FilePluginInfo>): PluginLoader<FilePluginInfo> {
+	override fun createPluginLoader(pluginInfos: Collection<FilePluginInfo>): PluginLoader<FilePluginInfo> {
 		return ClassLoaderPluginLoader(URLClassLoader(pluginInfos.map { it.jarFile.toURI().toURL() }.toTypedArray())) { it.pluginClassName }
 	}
 }

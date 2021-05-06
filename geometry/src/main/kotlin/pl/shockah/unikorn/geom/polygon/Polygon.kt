@@ -31,7 +31,7 @@ open class Polygon(
 		}
 
 	override val perimeter: Double
-		get() = lines.sumByDouble { it.perimeter }
+		get() = lines.sumOf { it.perimeter }
 
 	open val lines: List<Line>
 		get() {

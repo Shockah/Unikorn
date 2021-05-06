@@ -9,10 +9,6 @@ open class PluginLoadException: Exception {
 			val infos: Set<PluginInfo>
 	): PluginLoadException("Plugins are unknown: $infos.")
 
-	class AlreadyLoaded(
-			val infos: Set<PluginInfo>
-	): PluginLoadException("Plugins are already loaded: $infos.")
-
 	class Unresolvable(
 			val dueToMissingDependencies: Set<PluginDependencyResolveResult.UnresolvableDueToMissingDependencies<*>>,
 			val chains: Set<PluginDependencyResolveResult.UnresolvableChain<*>>
@@ -28,41 +24,43 @@ open class PluginUnloadException: Exception {
 			val infos: Set<PluginInfo>
 	): PluginUnloadException("Plugins are unknown: $infos.")
 
-	class AlreadyUnloaded(
-			val infos: Set<PluginInfo>
-	): PluginUnloadException("Plugins are already unloaded: $infos.")
-
 	class Required(
 			val requirements: Map<PluginInfo, Set<PluginInfo>>
 	): PluginUnloadException("Cannot unload plugins, as they are still required by other plugins: $requirements.")
 }
 
 interface PluginManager {
-	val allPluginInfos: Set<PluginInfo>
 	val loadedPluginInfos: Set<PluginInfo>
-	val unloadedPluginInfos: Set<PluginInfo>
-
 	val loadedPlugins: Map<PluginInfo, Plugin>
 
-	fun loadPlugins(infos: Collection<PluginInfo>)
-	fun unloadPlugins(infos: Collection<PluginInfo>)
+	interface Dynamic: PluginManager {
+		val allPluginInfos: Set<PluginInfo>
+		val unloadedPluginInfos: Set<PluginInfo>
 
-	fun loadUnloadedPlugins(infos: Collection<PluginInfo>) {
-		val unknownInfos = infos - allPluginInfos
-		if (unknownInfos.isNotEmpty())
-			throw PluginLoadException.UnknownPluginInfo(unknownInfos.toSet())
-		loadPlugins(infos.intersect(unloadedPluginInfos))
+		fun loadPlugins(infos: Collection<PluginInfo>)
+
+		fun loadAllPlugins() {
+			loadPlugins(unloadedPluginInfos)
+		}
+
+		interface FullUnload: Dynamic {
+			fun unloadAllPlugins()
+
+			interface Reload: FullUnload {
+				fun unloadAllPluginsAndReloadPluginInfos()
+			}
+		}
+
+		interface PartialUnload: FullUnload {
+			override fun unloadAllPlugins() {
+				unloadPlugins(loadedPluginInfos)
+			}
+
+			fun unloadPlugins(infos: Collection<PluginInfo>)
+
+			interface Reload: PartialUnload {
+				fun reloadPluginInfos()
+			}
+		}
 	}
-
-	fun loadAllPlugins() {
-		loadPlugins(unloadedPluginInfos)
-	}
-
-	fun unloadAllPlugins() {
-		unloadPlugins(loadedPluginInfos)
-	}
-}
-
-interface ReloadablePluginManager: PluginManager {
-	fun reloadPluginInfos()
 }

@@ -25,7 +25,7 @@ class Triangle(
 		}
 
 	override val perimeter: Double
-		get() = lines.sumByDouble { it.perimeter }
+		get() = lines.sumOf { it.perimeter }
 
 	override val area: Double
 		get() = abs((points[0].x * (points[1].y - points[2].y) + points[1].x * (points[2].y - points[0].y) + points[2].x * (points[0].y - points[1].y)) * 0.5)

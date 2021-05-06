@@ -19,10 +19,10 @@ class ClosedPolygon(
 	val triangles: List<Triangle> by dirtyTriangles
 
 	override val perimeter: Double
-		get() = lines.sumByDouble { it.perimeter }
+		get() = lines.sumOf { it.perimeter }
 
 	override val area: Double
-		get() = triangles.sumByDouble { it.area }
+		get() = triangles.sumOf { it.area }
 
 	override val lines: List<Line>
 		get() {

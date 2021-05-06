@@ -11,7 +11,7 @@ class ByteListStreamBinaryBuffer(
 	private var writeOffset = 0
 
 	override val readAvailable: Int
-		get() = arrays.sumBy { it.size } - readOffset + writeOffset
+		get() = arrays.sumOf { it.size } - readOffset + writeOffset
 
 	override fun readByte(): Byte {
 		val array = arrays.firstOrNull() ?: buildingArray ?: throw ArrayIndexOutOfBoundsException()

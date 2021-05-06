@@ -2,7 +2,8 @@ package pl.shockah.unikorn.math
 
 import pl.shockah.unikorn.ease.ease
 
-inline class Degrees @Deprecated("Use Degrees.Companion.of(value: Double) instead") constructor(
+@JvmInline
+value class Degrees @Deprecated("Use Degrees.Companion.of(value: Double) instead") constructor(
 		val value: Double
 ): BaseAngle<Degrees> {
 	companion object {

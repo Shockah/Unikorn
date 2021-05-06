@@ -11,7 +11,7 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 		private val loaderFactory: PluginLoaderFactory<PluginInfoType>,
 		private val dependencyInjector: PluginDependencyInjector? = AnnotationPluginDependencyInjector(),
 		parameterHandlers: List<PluginConstructorParameterHandler> = emptyList()
-): ReloadablePluginManager {
+): PluginManager.Dynamic.FullUnload.Reload {
 	private class PluginEntry<PluginInfoType: PluginInfo>(
 			val info: PluginInfoType,
 			val plugin: Plugin,
@@ -21,18 +21,19 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 
 	private val lock = ReentrantLock()
 	private val allParameterHandlers by lazy { listOf(InstancePluginConstructorParameterHandler(this)) + parameterHandlers }
-	private var providedInfos: Set<PluginInfoType>? = null
+	private var allPluginInfosStorage: Set<PluginInfoType>? = null
+	private var pluginLoaderStorage: PluginLoader<PluginInfoType>? = null
 	private var pluginEntries = mutableListOf<PluginEntry<PluginInfoType>>()
 
 	override val allPluginInfos: Set<PluginInfo>
 		get() = lock.withLock {
-			val providedInfos = providedInfos
-			if (providedInfos == null) {
-				val newProvidedInfos = infoProvider.getPluginInfos()
-				this.providedInfos = newProvidedInfos
-				return@withLock newProvidedInfos
+			val allPluginInfos = allPluginInfosStorage
+			if (allPluginInfos == null) {
+				val newAllPluginInfos = infoProvider.getPluginInfos()
+				allPluginInfosStorage = newAllPluginInfos
+				return@withLock newAllPluginInfos
 			} else {
-				return@withLock providedInfos
+				return@withLock allPluginInfos
 			}
 		}
 
@@ -45,24 +46,34 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 	override val loadedPlugins: Map<PluginInfo, Plugin>
 		get() = lock.withLock { pluginEntries.associate { it.info to it.plugin } }
 
+	private val pluginLoader: PluginLoader<PluginInfoType>
+		get() = lock.withLock {
+			val pluginLoader = pluginLoaderStorage
+			if (pluginLoader == null) {
+				@Suppress("UNCHECKED_CAST")
+				val typedInfos = allPluginInfos.map { it as PluginInfoType }
+
+				val newPluginLoader = loaderFactory.createPluginLoader(typedInfos)
+				pluginLoaderStorage = newPluginLoader
+				return@withLock newPluginLoader
+			} else {
+				return@withLock pluginLoader
+			}
+		}
+
 	override fun loadPlugins(infos: Collection<PluginInfo>) {
 		lock.withLock {
 			val unknownInfos = infos - allPluginInfos
 			if (unknownInfos.isNotEmpty())
 				throw PluginLoadException.UnknownPluginInfo(unknownInfos.toSet())
 
-			val alreadyLoadedInfos = infos.intersect(loadedPluginInfos)
-			if (alreadyLoadedInfos.isNotEmpty())
-				throw PluginLoadException.AlreadyLoaded(alreadyLoadedInfos)
-
 			@Suppress("UNCHECKED_CAST")
-			val typedInfos = infos.map { it as PluginInfoType }
+			val typedInfos = (infos - loadedPluginInfos).map { it as PluginInfoType }
 
 			val resolveResult = dependencyResolver.resolvePluginDependencies(typedInfos, pluginEntries.map { it.info })
 			if (resolveResult.unresolvableDueToMissingDependencies.isNotEmpty() || resolveResult.unresolvableChains.isNotEmpty())
 				throw PluginLoadException.Unresolvable(resolveResult.unresolvableDueToMissingDependencies, resolveResult.unresolvableChains)
 
-			val pluginLoader = loaderFactory.createPluginLoader((pluginEntries.map { it.info } + resolveResult.loadOrder.flatten()).toSet())
 			val newlyLoadedPluginEntries = mutableSetOf<PluginEntry<PluginInfoType>>()
 			for (loadStep in resolveResult.loadOrder) {
 				for (infoToLoad in loadStep) {
@@ -94,6 +105,9 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 				}
 			}
 
+			if (newlyLoadedPluginEntries.isEmpty())
+				return@withLock
+
 			val allLoadedPlugins: Map<PluginInfo, Plugin> = loadedPlugins
 			if (dependencyInjector != null) {
 				newlyLoadedPluginEntries.forEach { it.optionalDependencies += dependencyInjector.injectOptionalDependenciesIntoPlugin(it.plugin, allLoadedPlugins) }
@@ -101,44 +115,6 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 			}
 			val immutableNewlyLoadedPlugins: Map<PluginInfo, Plugin> = newlyLoadedPluginEntries.associate { it.info to it.plugin }
 			allLoadedPlugins.values.forEach { it.onPluginLoadCycleFinished(allLoadedPlugins, immutableNewlyLoadedPlugins) }
-		}
-	}
-
-	override fun unloadPlugins(infos: Collection<PluginInfo>) {
-		lock.withLock {
-			val unknownInfos = infos - allPluginInfos
-			if (unknownInfos.isNotEmpty())
-				throw PluginLoadException.UnknownPluginInfo(unknownInfos.toSet())
-
-			val alreadyUnloadedInfos = infos.intersect(unloadedPluginInfos)
-			if (alreadyUnloadedInfos.isNotEmpty())
-				throw PluginUnloadException.AlreadyUnloaded(alreadyUnloadedInfos)
-
-			val pluginEntriesToUnload = pluginEntries.filter { infos.contains(it.info) }.reversed()
-			val pluginsToUnload = pluginEntriesToUnload.map { it.plugin }
-			val requirements = pluginEntries
-					.filter { it !in pluginEntriesToUnload }
-					.associateWith { it.requiredDependencies.intersect(pluginsToUnload) }
-					.filterValues { it.isNotEmpty() }
-					.mapKeys { it.key.info }
-			if (requirements.isNotEmpty()) {
-				val pluginToInfo = pluginEntries.associate { it.plugin to it.info }
-				throw PluginUnloadException.Required(requirements.mapValues { it.value.map { pluginToInfo[it]!! }.toSet() })
-			}
-
-			pluginEntriesToUnload.forEach { unloadPluginEntry(it) }
-			val allLoadedPlugins: Map<PluginInfo, Plugin> = loadedPlugins
-			val unloadedPluginInfos: Set<PluginInfo> = pluginEntriesToUnload.map { it.info }.toSet()
-			allLoadedPlugins.values.forEach { it.onPluginUnloadCycleFinished(allLoadedPlugins, unloadedPluginInfos) }
-		}
-	}
-
-	override fun loadUnloadedPlugins(infos: Collection<PluginInfo>) {
-		lock.withLock {
-			val unknownInfos = infos - allPluginInfos
-			if (unknownInfos.isNotEmpty())
-				throw PluginLoadException.UnknownPluginInfo(unknownInfos.toSet())
-			loadPlugins(infos.filter { unloadedPluginInfos.contains(it) })
 		}
 	}
 
@@ -155,9 +131,11 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 		}
 	}
 
-	override fun reloadPluginInfos() {
+	override fun unloadAllPluginsAndReloadPluginInfos() {
 		lock.withLock {
-			providedInfos = infoProvider.getPluginInfos() + pluginEntries.map { it.info }
+			unloadAllPlugins()
+			allPluginInfosStorage = infoProvider.getPluginInfos() + pluginEntries.map { it.info }
+			pluginLoaderStorage = null
 		}
 	}
 

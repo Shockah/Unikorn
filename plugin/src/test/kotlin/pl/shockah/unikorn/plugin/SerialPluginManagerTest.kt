@@ -53,7 +53,7 @@ class SerialPluginManagerTest {
 		}
 	}
 
-	private fun getPluginManager(vararg pluginNames: String): PluginManager {
+	private fun getPluginManager(vararg pluginNames: String): PluginManager.Dynamic.FullUnload {
 		return SerialPluginManager(
 				infoProvider = FileListPluginInfoProvider(pluginNames.map { getPathForPlugin(it) }),
 				loaderFactory = FilePluginLoaderFactory()
