@@ -1,8 +1,27 @@
 package pl.shockah.unikorn.plugin
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
+@Serializable(PluginVersion.Serializer::class)
 data class PluginVersion(
 		val parts: List<Int>
 ) {
+	object Serializer: KSerializer<PluginVersion> {
+		override val descriptor = String.serializer().descriptor
+
+		override fun serialize(encoder: Encoder, value: PluginVersion) {
+			encoder.encodeString(value.toString())
+		}
+
+		override fun deserialize(decoder: Decoder): PluginVersion {
+			return PluginVersion(decoder.decodeString())
+		}
+	}
+
 	companion object {
 		operator fun invoke(toParse: String): PluginVersion {
 			val parts = toParse.split(".").map { it.toInt() }
@@ -16,9 +35,22 @@ data class PluginVersion(
 		return parts.joinToString(".")
 	}
 
+	@Serializable(Filter.Serializer::class)
 	data class Filter(
 			val parts: List<Part>
 	) {
+		object Serializer: KSerializer<Filter> {
+			override val descriptor = String.serializer().descriptor
+
+			override fun serialize(encoder: Encoder, value: Filter) {
+				encoder.encodeString(value.toString())
+			}
+
+			override fun deserialize(decoder: Decoder): Filter {
+				return Filter(decoder.decodeString())
+			}
+		}
+
 		companion object {
 			operator fun invoke(toParse: String): Filter {
 				val parts = toParse.split(".").map {

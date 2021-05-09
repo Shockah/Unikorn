@@ -1,6 +1,5 @@
 {
 	"identifier": "pl.shockah.unikorn.plugin.weak2",
 	"pluginClassName": "pl.shockah.unikorn.plugin.weak2.Weak2Plugin",
-	"version": "1.0",
-	"isTestPlugin": true
+	"version": "1.0"
 }

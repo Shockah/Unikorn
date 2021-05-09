@@ -1,7 +1,16 @@
 dependencies {
 	implementation project(':core')
-	implementation 'com.beust:klaxon:5.5'
-	implementation 'io.github.microutils:kotlin-logging:1.6.26'
+
+	implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.0'
+	implementation 'com.charleskorn.kaml:kaml:0.31.0'
+}
+
+compileKotlin {
+	kotlinOptions {
+		freeCompilerArgs += [
+				'-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi'
+		]
+	}
 }
 
 test {

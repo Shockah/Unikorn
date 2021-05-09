@@ -1,12 +1,10 @@
 package pl.shockah.unikorn.plugin.impl
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Klaxon
+import com.charleskorn.kaml.Yaml
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import pl.shockah.unikorn.collection.mapValid
-import pl.shockah.unikorn.guard
-import pl.shockah.unikorn.plugin.PluginInfo
 import pl.shockah.unikorn.plugin.PluginInfoProvider
-import pl.shockah.unikorn.plugin.PluginVersion
 import java.io.File
 import java.util.zip.ZipFile
 
@@ -15,24 +13,28 @@ abstract class BaseFilePluginInfoProvider: PluginInfoProvider<FilePluginInfo> {
 		require(jarFile.exists() && jarFile.isFile) { "Plugin JAR file ${jarFile.absoluteFile.normalize().absolutePath} doesn't exist." }
 
 		ZipFile(jarFile).use { zip ->
-			val jsonEntry = zip.getEntry("plugin.json").guard { throw FilePluginInfoProvider.MissingPluginJsonException() }
-			val json = Klaxon().parseJsonObject(zip.getInputStream(jsonEntry).reader())
-			return readPluginInfo(json, jarFile)
+			val handlers: List<Pair<List<String>, (String) -> FilePluginInfo.Base?>> = listOf(
+					listOf("yml", "yaml") to { Yaml.default.decodeFromString(it) },
+					listOf("json") to { Json.Default.decodeFromString(it) }
+			)
+			for ((extensions, handler) in handlers) {
+				for (extension in extensions) {
+					val zipEntry = zip.getEntry("plugin.$extension") ?: continue
+					val content = zip.getInputStream(zipEntry).bufferedReader().use { it.readText() }
+					return readPluginInfo(handler(content) ?: continue, jarFile)
+				}
+			}
+			throw FilePluginInfoProvider.MissingPluginDefinitonException()
 		}
 	}
 
-	protected fun readPluginInfo(json: JsonObject, jarFile: File): FilePluginInfo {
+	protected fun readPluginInfo(basePluginInfo: FilePluginInfo.Base, jarFile: File): FilePluginInfo {
 		return FilePluginInfo(
-				json.string("identifier")!!,
-				PluginVersion(json.string("version") ?: "1.0"),
-				json.array<JsonObject>("dependencies")?.map {
-					PluginInfo.DependencyEntry(
-							it.string("identifier")!!,
-							PluginVersion.Filter(it.string("version") ?: "*")
-					)
-				}?.toSet() ?: emptySet(),
+				basePluginInfo.identifier,
+				basePluginInfo.version,
+				basePluginInfo.dependencies,
 				jarFile,
-				json.string("pluginClassName")!!
+				basePluginInfo.pluginClassName
 		)
 	}
 }
@@ -50,7 +52,7 @@ class FileListPluginInfoProvider(
 class FilePluginInfoProvider(
 		private val pluginDirectory: File
 ): BaseFilePluginInfoProvider() {
-	class MissingPluginJsonException: Exception()
+	class MissingPluginDefinitonException: Exception()
 
 	override fun getPluginInfos(): Set<FilePluginInfo> {
 		return (pluginDirectory.listFiles() ?: emptyArray()).filter { it.extension == "jar" }.mapValid { readPluginInfo(it.absoluteFile.normalize()) }.toSet()
