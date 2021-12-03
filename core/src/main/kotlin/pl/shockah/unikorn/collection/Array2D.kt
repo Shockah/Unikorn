@@ -99,6 +99,36 @@ open class Array2D<T> @PublishedApi internal constructor(
 	}
 }
 
+inline fun <reified T> Array2D<T>.takeRows(rows: Iterable<Int>): Array2D<T> {
+	val targetRows = rows.toList()
+	targetRows.forEach { require(it in 0 until height) }
+	return Array2D(width, targetRows.size) { x, y -> this[x, targetRows[y]] }
+}
+
+inline fun <reified T> Array2D<T>.takeColumns(columns: Iterable<Int>): Array2D<T> {
+	val targetColumns = columns.toList()
+	targetColumns.forEach { require(it in 0 until width) }
+	return Array2D(targetColumns.size, height) { x, y -> this[targetColumns[x], y] }
+}
+
+inline fun <reified T> Array2D<T>.dropRows(rows: Iterable<Int>): Array2D<T> {
+	return takeRows((0 until height) - rows)
+}
+
+inline fun <reified T> Array2D<T>.dropColumns(columns: Iterable<Int>): Array2D<T> {
+	return takeColumns((0 until width) - columns)
+}
+
+inline fun <reified T> Array2D<T>.takeRows(predicate: (List<T>) -> Boolean): Array2D<T> {
+	val rows = (0 until height).map { it to getRow(it) }.filter { predicate(it.second) }.map { it.first }
+	return takeRows(rows)
+}
+
+inline fun <reified T> Array2D<T>.takeColumns(predicate: (List<T>) -> Boolean): Array2D<T> {
+	val columns = (0 until width).map { it to getColumn(it) }.filter { predicate(it.second) }.map { it.first }
+	return takeColumns(columns)
+}
+
 class MutableArray2D<T> @PublishedApi internal constructor(
 		width: Int,
 		height: Int,
