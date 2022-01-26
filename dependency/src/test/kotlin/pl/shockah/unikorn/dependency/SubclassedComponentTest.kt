@@ -10,7 +10,7 @@ class SubclassedComponentTest {
 	@Test
 	@Suppress("UNCHECKED_CAST")
 	fun testSubclassing() {
-		val container = Container(defaultComponentStorageFactory = storageFactory)
+		val container = ContainerImpl(defaultComponentStorageFactory = storageFactory)
 
 		container.register(ArrayList<String>())
 
@@ -25,7 +25,7 @@ class SubclassedComponentTest {
 	@Test
 	@Suppress("UNCHECKED_CAST")
 	fun testNoSubclassing() {
-		val container = Container(defaultComponentStorageFactory = storageFactory)
+		val container = ContainerImpl(defaultComponentStorageFactory = storageFactory)
 
 		container.register(ArrayList<String>())
 

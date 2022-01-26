@@ -9,7 +9,7 @@ class ContainerTest {
 	@Test
 	@Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 	fun testRegisterAndUnregister() {
-		val container = Container(defaultComponentStorageFactory = storageFactory)
+		val container = ContainerImpl(defaultComponentStorageFactory = storageFactory)
 
 		container.register(Object())
 		Assertions.assertDoesNotThrow { container.resolve<Object>() }

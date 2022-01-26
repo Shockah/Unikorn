@@ -9,8 +9,8 @@ class ParentContainerTest {
 
 	@Test
 	fun testResolvingFromParent() {
-		val parentContainer = Container(defaultComponentStorageFactory = storageFactory)
-		val childContainer = Container(parentContainer, storageFactory)
+		val parentContainer = ContainerImpl(defaultComponentStorageFactory = storageFactory)
+		val childContainer = ContainerImpl(parentContainer, storageFactory)
 
 		parentContainer.register(Object())
 
@@ -22,8 +22,8 @@ class ParentContainerTest {
 
 	@Test
 	fun testResolvingFromChild() {
-		val parentContainer = Container(defaultComponentStorageFactory = storageFactory)
-		val childContainer = Container(parentContainer, storageFactory)
+		val parentContainer = ContainerImpl(defaultComponentStorageFactory = storageFactory)
+		val childContainer = ContainerImpl(parentContainer, storageFactory)
 
 		childContainer.register(Object())
 
@@ -32,9 +32,9 @@ class ParentContainerTest {
 	}
 
 	@Test
-	fun testOverridenComponent() {
-		val parentContainer = Container(defaultComponentStorageFactory = storageFactory)
-		val childContainer = Container(parentContainer, storageFactory)
+	fun testOverriddenComponent() {
+		val parentContainer = ContainerImpl(defaultComponentStorageFactory = storageFactory)
+		val childContainer = ContainerImpl(parentContainer, storageFactory)
 
 		parentContainer.register(Object())
 		childContainer.register(Object())

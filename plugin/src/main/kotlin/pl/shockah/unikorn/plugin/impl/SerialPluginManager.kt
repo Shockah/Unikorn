@@ -41,7 +41,7 @@ class SerialPluginManager<PluginInfoType: PluginInfo>(
 		get() = lock.withLock { pluginEntries.map { it.info }.toSet() }
 
 	override val unloadedPluginInfos: Set<PluginInfo>
-		get() = lock.withLock { allPluginInfos - pluginEntries.map { it.info } }
+		get() = lock.withLock { allPluginInfos - pluginEntries.map { it.info }.toSet() }
 
 	override val loadedPlugins: Map<PluginInfo, Plugin>
 		get() = lock.withLock { pluginEntries.associate { it.info to it.plugin } }

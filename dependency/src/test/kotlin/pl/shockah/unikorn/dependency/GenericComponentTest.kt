@@ -8,7 +8,7 @@ class GenericComponentTest {
 
 	@Test
 	fun testDifferentGenerics() {
-		val container = Container(defaultComponentStorageFactory = storageFactory)
+		val container = ContainerImpl(defaultComponentStorageFactory = storageFactory)
 
 		container.register<List<String>>(mutableListOf())
 		container.register<List<Int>>(mutableListOf())
